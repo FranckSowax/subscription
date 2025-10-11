@@ -63,25 +63,43 @@ export async function GET(request: NextRequest) {
     const preTest = tests?.find(t => t.type === 'PRE');
     const postTest = tests?.find(t => t.type === 'POST');
 
+    // Get test IDs
+    const { data: preTestData } = await supabase
+      .from('tests')
+      .select('id')
+      .eq('inscription_id', inscriptionId)
+      .eq('type', 'PRE')
+      .single();
+
+    const { data: postTestData } = await supabase
+      .from('tests')
+      .select('id')
+      .eq('inscription_id', inscriptionId)
+      .eq('type', 'POST')
+      .single();
+
     // Get email from auth
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const profile = (inscription as any).profiles;
     const { data: authUser } = await supabase.auth.admin.getUserById(inscription.profile_id);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const session = sessionBooking ? (sessionBooking as any).sessions : null;
+
     const dashboardData = {
       full_name: profile?.full_name || 'N/A',
       email: authUser?.user?.email || 'N/A',
-      whatsapp_number: profile?.whatsapp_number || 'N/A',
-      gender: profile?.gender || 'N/A',
-      validated: inscription.validated,
-      registration_date: inscription.registration_date,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      session_date: sessionBooking ? (sessionBooking as any).sessions?.session_date : null,
-      pre_test_score: preTest ? `${preTest.score}/${preTest.max_score}` : null,
-      pre_test_percentage: preTest ? Math.round((preTest.score / preTest.max_score) * 100) : null,
-      post_test_score: postTest ? `${postTest.score}/${postTest.max_score}` : null,
-      post_test_percentage: postTest ? Math.round((postTest.score / postTest.max_score) * 100) : null,
-      can_take_post_test: preTest && !postTest,
+      inscription_date: inscription.registration_date,
+      session_date: session?.session_date || null,
+      pre_test_id: preTestData?.id || null,
+      pre_test_score: preTest?.score || null,
+      pre_test_max_score: preTest?.max_score || null,
+      pre_test_date: preTest?.taken_at || null,
+      post_test_id: postTestData?.id || null,
+      post_test_score: postTest?.score || null,
+      post_test_max_score: postTest?.max_score || null,
+      post_test_date: postTest?.taken_at || null,
+      post_test_available: !!preTest && !postTest,
     };
 
     return NextResponse.json({ success: true, data: dashboardData });
