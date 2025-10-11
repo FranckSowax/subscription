@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Calendar, Users, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Calendar, Users, CheckCircle, AlertCircle, Loader2, Clock } from 'lucide-react';
 
 interface Session {
   id: string;
@@ -26,7 +26,7 @@ interface SessionSelectorProps {
   onSuccess?: () => void;
 }
 
-export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorProps) {
+export function SessionSelector({ inscriptionId }: SessionSelectorProps) {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [stats, setStats] = useState<SessionStats | null>(null);
   const [selectedSession, setSelectedSession] = useState<string | null>(null);
