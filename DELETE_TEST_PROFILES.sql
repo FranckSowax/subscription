@@ -19,13 +19,19 @@ DELETE FROM inscriptions;
 DELETE FROM profiles;
 
 -- ================================================
--- NOTE IMPORTANTE
+-- ⚠️ ÉTAPE CRITIQUE - SUPPRIMER LES UTILISATEURS AUTH
 -- ================================================
--- Les utilisateurs dans auth.users doivent être supprimés manuellement :
--- 1. Allez dans Supabase Dashboard
--- 2. Authentication → Users
--- 3. Sélectionnez tous les utilisateurs
--- 4. Cliquez sur "Delete users"
+-- IMPORTANT : Ce script ne supprime PAS les utilisateurs de auth.users !
+-- Vous devez OBLIGATOIREMENT supprimer les utilisateurs manuellement :
+-- 
+-- 1. Ouvrez Supabase Dashboard (https://supabase.com/dashboard)
+-- 2. Sélectionnez votre projet
+-- 3. Allez dans "Authentication" → "Users"
+-- 4. Cochez la case en haut pour TOUT sélectionner
+-- 5. Cliquez sur "Delete users" (bouton rouge)
+-- 6. Confirmez la suppression
+--
+-- ⚠️ Sans cette étape, vous aurez une erreur 409 (Conflict) lors de l'inscription !
 
 -- ================================================
 -- VÉRIFICATION
