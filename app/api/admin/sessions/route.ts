@@ -50,20 +50,29 @@ export async function GET() {
         // Get test scores for each inscription
         const participants = await Promise.all(
           (bookings || []).map(async (booking) => {
-            const inscription = booking?.inscriptions;
-            if (!inscription || !inscription.id) return null;
+            const inscription = booking?.inscriptions as {
+              id: string;
+              profile_id: string;
+              registration_date: string;
+              validated: boolean;
+              profiles: {
+                full_name: string;
+                whatsapp_number: string;
+              };
+            } | null;
+            if (!inscription) return null;
 
             // Get PRE test score
             const { data: preTest } = await supabase
               .from('tests')
               .select('score')
-              .eq('inscription_id', inscription.id as string)
+              .eq('inscription_id', inscription.id)
               .eq('type', 'PRE')
               .single();
 
             // Get email from auth.users
             const { data: authUser } = await supabase.auth.admin.getUserById(
-              inscription.profile_id as string
+              inscription.profile_id
             );
 
             return {
