@@ -21,7 +21,7 @@ export const registrationSchema = z.object({
   
   gender: z
     .enum(['Homme', 'Femme'], {
-      required_error: 'Veuillez sélectionner votre genre',
+      errorMap: () => ({ message: 'Veuillez sélectionner votre genre' })
     }),
   
   consent: z
