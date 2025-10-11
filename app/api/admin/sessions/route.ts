@@ -63,8 +63,8 @@ export async function GET() {
 
         // Get test scores for each inscription
         const participants = await Promise.all(
-          (bookings || []).map(async (booking: Booking) => {
-            const inscription = booking.inscriptions;
+          (bookings || []).map(async (booking) => {
+            const inscription = booking?.inscriptions;
             if (!inscription) return null;
 
             // Get PRE test score
