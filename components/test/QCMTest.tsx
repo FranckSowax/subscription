@@ -107,19 +107,19 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
             {answeredCount}/{questions.length} réponses
           </span>
         </div>
-        <div className="w-full bg-secondary rounded-full h-2">
+        <div className="w-full bg-secondary rounded-full h-3 overflow-hidden">
           <div
-            className="bg-primary h-2 rounded-full transition-all duration-300"
+            className="bg-gradient-to-r from-primary via-accent to-primary h-3 rounded-full transition-all duration-300 shadow-lg shadow-primary/30"
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
 
       {/* Question Card */}
-      <Card>
-        <CardHeader>
+      <Card className="border-2 shadow-lg bg-gradient-to-br from-white via-primary/5 to-accent/5">
+        <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 border-b">
           <div className="flex items-start justify-between gap-4">
-            <CardTitle className="text-xl">
+            <CardTitle className="text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               {currentQuestion + 1}. {question.question_text}
             </CardTitle>
             {answers[question.id] && (
@@ -136,18 +136,18 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
             <button
               key={choice}
               onClick={() => handleAnswerSelect(question.id, choice)}
-              className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+              className={`w-full text-left p-4 rounded-xl border-2 transition-all transform hover:scale-[1.02] ${
                 answers[question.id] === choice
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border hover:border-primary/50 hover:bg-secondary/50'
+                  ? 'border-primary bg-gradient-to-r from-primary/10 to-accent/10 shadow-md shadow-primary/20'
+                  : 'border-border hover:border-primary/50 bg-gradient-to-r from-white to-gray-50 hover:shadow-md'
               }`}
             >
               <div className="flex items-start gap-3">
                 <div
-                  className={`flex items-center justify-center w-8 h-8 rounded-full border-2 shrink-0 ${
+                  className={`flex items-center justify-center w-8 h-8 rounded-full border-2 shrink-0 font-semibold ${
                     answers[question.id] === choice
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'border-border'
+                      ? 'border-primary bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/30'
+                      : 'border-border bg-white'
                   }`}
                 >
                   {choice}

@@ -178,7 +178,7 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
         <CardContent className="space-y-6">
           {/* Sessions Octobre */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-primary">📅 Octobre 2025</h3>
+            <h3 className="text-lg font-semibold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">📅 Octobre 2025</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {getMonthSessions('octobre').map((session) => (
                 <button
@@ -186,9 +186,11 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
                   onClick={() => !session.is_full && setSelectedSession(session.id)}
                   disabled={session.is_full}
                   className={`
-                    relative p-4 rounded-lg border-2 transition-all text-left
-                    ${selectedSession === session.id ? 'border-primary bg-primary/5 shadow-md' : 'border-gray-200 hover:border-primary/50'}
-                    ${session.is_full ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}
+                    relative p-4 rounded-xl border-2 transition-all text-left overflow-hidden
+                    ${selectedSession === session.id 
+                      ? 'border-primary bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 shadow-lg shadow-primary/20' 
+                      : 'border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-primary/50 hover:shadow-md'}
+                    ${session.is_full ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:shadow-lg hover:scale-[1.02]'}
                   `}
                 >
                   <div className="flex justify-between items-start mb-2">
@@ -221,7 +223,7 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
 
           {/* Sessions Novembre */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-primary">📅 Novembre 2025</h3>
+            <h3 className="text-lg font-semibold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">📅 Novembre 2025</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {getMonthSessions('novembre').map((session) => (
                 <button
@@ -229,9 +231,11 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
                   onClick={() => !session.is_full && setSelectedSession(session.id)}
                   disabled={session.is_full}
                   className={`
-                    relative p-4 rounded-lg border-2 transition-all text-left
-                    ${selectedSession === session.id ? 'border-primary bg-primary/5 shadow-md' : 'border-gray-200 hover:border-primary/50'}
-                    ${session.is_full ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}
+                    relative p-4 rounded-xl border-2 transition-all text-left overflow-hidden
+                    ${selectedSession === session.id 
+                      ? 'border-primary bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 shadow-lg shadow-primary/20' 
+                      : 'border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-primary/50 hover:shadow-md'}
+                    ${session.is_full ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:shadow-lg hover:scale-[1.02]'}
                   `}
                 >
                   <div className="flex justify-between items-start mb-2">
