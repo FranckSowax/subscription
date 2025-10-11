@@ -100,24 +100,26 @@ export default function AdminDashboardPage() {
               </Card>
             </Link>
 
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-secondary rounded-lg">
-                    <BarChart3 className="h-6 w-6 text-muted-foreground" />
+            <Link href="/admin/stats">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-secondary rounded-lg">
+                      <BarChart3 className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <CardTitle>Statistiques</CardTitle>
+                      <CardDescription>Analyses détaillées</CardDescription>
+                    </div>
                   </div>
-                  <div>
-                    <CardTitle>Statistiques</CardTitle>
-                    <CardDescription>Analyses détaillées</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Voir ci-dessous pour les statistiques
-                </p>
-              </CardContent>
-            </Card>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Genre, inscriptions, tests
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
 
           {/* Student List */}

@@ -99,7 +99,7 @@ export function RegistrationForm() {
           {/* WhatsApp Number */}
           <div className="space-y-2">
             <Label htmlFor="whatsapp_number">
-              Numéro de téléphone
+              Numéro de téléphone <span className="text-destructive">*</span>
             </Label>
             <Input
               id="whatsapp_number"
@@ -108,9 +108,29 @@ export function RegistrationForm() {
               {...register('whatsapp_number')}
               disabled={isLoading}
             />
-            <p className="text-xs text-muted-foreground">
-              Nous utiliserons ce numéro pour vous contacter si nécessaire
-            </p>
+            {errors.whatsapp_number && (
+              <p className="text-sm text-destructive">{errors.whatsapp_number.message}</p>
+            )}
+          </div>
+
+          {/* Gender */}
+          <div className="space-y-2">
+            <Label htmlFor="gender">
+              Genre <span className="text-destructive">*</span>
+            </Label>
+            <select
+              id="gender"
+              {...register('gender')}
+              disabled={isLoading}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="">Sélectionnez votre genre</option>
+              <option value="Homme">Homme</option>
+              <option value="Femme">Femme</option>
+            </select>
+            {errors.gender && (
+              <p className="text-sm text-destructive">{errors.gender.message}</p>
+            )}
           </div>
 
           {/* Consent Checkbox */}
