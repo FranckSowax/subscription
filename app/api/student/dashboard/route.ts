@@ -1,36 +1,94 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET(request: NextRequest) {
   try {
-    const token = request.headers.get('Authorization')?.replace('Bearer ', '');
-    if (!token) {
-      return NextResponse.json({ error: 'Token requis' }, { status: 401 });
+    const { searchParams } = new URL(request.url);
+    const inscriptionId = searchParams.get('inscription_id');
+
+    if (!inscriptionId) {
+      return NextResponse.json(
+        { error: 'ID d\'inscription requis' },
+        { status: 400 }
+      );
     }
 
-    const supabase = await createClient();
-
-    // Vérifier token
-    const { data: authToken } = await supabase
-      .from('student_auth_tokens')
-      .select('profile_id, expires_at')
-      .eq('token', token)
+    // Get inscription with profile and session info
+    const { data: inscription, error: inscriptionError } = await supabase
+      .from('inscriptions')
+      .select(`
+        id,
+        validated,
+        registration_date,
+        profile_id,
+        profiles (
+          full_name,
+          whatsapp_number,
+          gender
+        )
+      `)
+      .eq('id', inscriptionId)
       .single();
 
-    if (!authToken || new Date(authToken.expires_at) < new Date()) {
-      return NextResponse.json({ error: 'Token invalide' }, { status: 401 });
+    if (inscriptionError || !inscription) {
+      return NextResponse.json(
+        { error: 'Inscription non trouvée' },
+        { status: 404 }
+      );
     }
 
-    // Récupérer dashboard
-    const { data: dashboard } = await supabase
-      .from('student_dashboard')
-      .select('*')
-      .eq('profile_id', authToken.profile_id)
+    // Get session booking
+    const { data: sessionBooking } = await supabase
+      .from('session_bookings')
+      .select(`
+        sessions (
+          session_date,
+          max_participants
+        )
+      `)
+      .eq('inscription_id', inscriptionId)
       .single();
 
-    return NextResponse.json({ success: true, data: dashboard });
+    // Get tests
+    const { data: tests } = await supabase
+      .from('tests')
+      .select('type, score, max_score, taken_at')
+      .eq('inscription_id', inscriptionId);
+
+    const preTest = tests?.find(t => t.type === 'PRE');
+    const postTest = tests?.find(t => t.type === 'POST');
+
+    // Get email from auth
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const profile = (inscription as any).profiles;
+    const { data: authUser } = await supabase.auth.admin.getUserById(inscription.profile_id);
+
+    const dashboardData = {
+      full_name: profile?.full_name || 'N/A',
+      email: authUser?.user?.email || 'N/A',
+      whatsapp_number: profile?.whatsapp_number || 'N/A',
+      gender: profile?.gender || 'N/A',
+      validated: inscription.validated,
+      registration_date: inscription.registration_date,
+      session_date: sessionBooking ? (sessionBooking as any).sessions?.session_date : null,
+      pre_test_score: preTest ? `${preTest.score}/${preTest.max_score}` : null,
+      pre_test_percentage: preTest ? Math.round((preTest.score / preTest.max_score) * 100) : null,
+      post_test_score: postTest ? `${postTest.score}/${postTest.max_score}` : null,
+      post_test_percentage: postTest ? Math.round((postTest.score / postTest.max_score) * 100) : null,
+      can_take_post_test: preTest && !postTest,
+    };
+
+    return NextResponse.json({ success: true, data: dashboardData });
   } catch (error) {
     console.error('Dashboard error:', error);
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Erreur serveur' },
+      { status: 500 }
+    );
   }
 }
