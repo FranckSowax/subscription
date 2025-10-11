@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Users, FileQuestion, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Users, FileQuestion, BarChart3, Calendar } from 'lucide-react';
 import { StudentList } from '@/components/admin/StudentList';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -36,7 +36,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Link href="/admin/dashboard">
               <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-primary">
                 <CardHeader>
@@ -53,6 +53,27 @@ export default function AdminDashboardPage() {
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
                     Voir la liste complète, exporter les données
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/admin/sessions">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-accent">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-accent/10 rounded-lg">
+                      <Calendar className="h-6 w-6 text-accent" />
+                    </div>
+                    <div>
+                      <CardTitle>Sessions</CardTitle>
+                      <CardDescription>Inscrits par jour</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Voir les participants par session
                   </p>
                 </CardContent>
               </Card>
