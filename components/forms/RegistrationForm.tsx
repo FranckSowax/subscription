@@ -70,28 +70,12 @@ export function RegistrationForm() {
             <Input
               id="full_name"
               type="text"
-              placeholder="Ex: Jean Dupont"
+              placeholder="Ex: Laura Ndong"
               {...register('full_name')}
               disabled={isLoading}
             />
             {errors.full_name && (
               <p className="text-sm text-destructive">{errors.full_name.message}</p>
-            )}
-          </div>
-
-          {/* Date of Birth */}
-          <div className="space-y-2">
-            <Label htmlFor="date_of_birth">
-              Date de naissance <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="date_of_birth"
-              type="date"
-              {...register('date_of_birth')}
-              disabled={isLoading}
-            />
-            {errors.date_of_birth && (
-              <p className="text-sm text-destructive">{errors.date_of_birth.message}</p>
             )}
           </div>
 
@@ -170,12 +154,12 @@ export function RegistrationForm() {
                 Inscription en cours...
               </>
             ) : (
-              'S\'inscrire et passer le test'
+              'Choisir la date de session'
             )}
           </Button>
 
           <p className="text-sm text-center text-muted-foreground">
-            Après l&apos;inscription, vous serez redirigé vers le test de pré-évaluation (10 questions).
+            Après l&apos;inscription, vous choisirez votre date de masterclass.
           </p>
         </form>
       </CardContent>

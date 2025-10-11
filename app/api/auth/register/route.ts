@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { full_name, date_of_birth, email, whatsapp_number } = validationResult.data;
+    const { full_name, email, whatsapp_number } = validationResult.data;
 
     // Check if email already exists
     const { data: existingUser } = await supabase.auth.admin.listUsers();
@@ -64,7 +64,6 @@ export async function POST(request: NextRequest) {
     const { error: profileError } = await supabase.from('profiles').insert({
       id: authData.user.id,
       full_name,
-      date_of_birth,
       whatsapp_number,
     });
 
