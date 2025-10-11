@@ -290,3 +290,4 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
       </Card>
     </div>
   );
+}
