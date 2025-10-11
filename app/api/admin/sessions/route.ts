@@ -6,20 +6,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-interface Booking {
-  inscription_id: string;
-  inscriptions: {
-    id: string;
-    profile_id: string;
-    registration_date: string;
-    validated: boolean;
-    profiles: {
-      full_name: string;
-      whatsapp_number: string;
-    };
-  };
-}
-
 export async function GET() {
   try {
     // Get all sessions with their bookings
@@ -65,19 +51,19 @@ export async function GET() {
         const participants = await Promise.all(
           (bookings || []).map(async (booking) => {
             const inscription = booking?.inscriptions;
-            if (!inscription) return null;
+            if (!inscription || !inscription.id) return null;
 
             // Get PRE test score
             const { data: preTest } = await supabase
               .from('tests')
               .select('score')
-              .eq('inscription_id', inscription.id)
+              .eq('inscription_id', inscription.id as string)
               .eq('type', 'PRE')
               .single();
 
             // Get email from auth.users
             const { data: authUser } = await supabase.auth.admin.getUserById(
-              inscription.profile_id
+              inscription.profile_id as string
             );
 
             return {
