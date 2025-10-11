@@ -83,7 +83,7 @@ export default function StudentDashboardPage() {
             <div className="text-center space-y-4">
               <p className="text-destructive">{error || 'Erreur de chargement'}</p>
               <Button onClick={() => router.push('/')}>
-                Retour à l'accueil
+                Retour à l&apos;accueil
               </Button>
             </div>
           </CardContent>

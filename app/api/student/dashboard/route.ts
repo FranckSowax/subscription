@@ -75,6 +75,7 @@ export async function GET(request: NextRequest) {
       gender: profile?.gender || 'N/A',
       validated: inscription.validated,
       registration_date: inscription.registration_date,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       session_date: sessionBooking ? (sessionBooking as any).sessions?.session_date : null,
       pre_test_score: preTest ? `${preTest.score}/${preTest.max_score}` : null,
       pre_test_percentage: preTest ? Math.round((preTest.score / preTest.max_score) * 100) : null,
