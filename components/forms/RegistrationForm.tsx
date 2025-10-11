@@ -119,7 +119,6 @@ export function RegistrationForm() {
             </Label>
             <Input
               id="whatsapp_number"
-              name="whatsapp_number"
               type="tel"
               placeholder="+237 6XX XX XX XX"
               {...register('whatsapp_number')}
