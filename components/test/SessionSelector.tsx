@@ -101,7 +101,7 @@ export function SessionSelector({ inscriptionId }: SessionSelectorProps) {
   };
 
   const getSessionTime = () => {
-    return '9h00 - 13h00';
+    return '9h00 - 15h00';
   };
 
   const getMonthSessions = (month: string) => {
@@ -172,7 +172,7 @@ export function SessionSelector({ inscriptionId }: SessionSelectorProps) {
             Choisissez votre date de masterclass
           </CardTitle>
           <CardDescription>
-            Sélectionnez la date qui vous convient le mieux. 12 sessions disponibles, 25 places par session (300 places au total).
+            Sélectionnez la date qui vous convient le mieux. 12 sessions de 9h à 15h, 25 places par session (300 places au total).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">

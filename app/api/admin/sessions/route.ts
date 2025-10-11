@@ -50,16 +50,8 @@ export async function GET() {
         // Get test scores for each inscription
         const participants = await Promise.all(
           (bookings || []).map(async (booking) => {
-            const inscription = booking?.inscriptions as {
-              id: string;
-              profile_id: string;
-              registration_date: string;
-              validated: boolean;
-              profiles: {
-                full_name: string;
-                whatsapp_number: string;
-              };
-            } | null;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const inscription = (booking as any)?.inscriptions;
             if (!inscription) return null;
 
             // Get PRE test score
