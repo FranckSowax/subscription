@@ -1,13 +1,14 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Mail, LogIn, Home } from 'lucide-react';
+import { CheckCircle, Mail, LogIn, Home, Loader2 } from 'lucide-react';
 import { LoginButton } from '@/components/ui/LoginButton';
 
-export default function TestConfirmationPage() {
+function ConfirmationContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
 
@@ -158,5 +159,17 @@ export default function TestConfirmationPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function TestConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <ConfirmationContent />
+    </Suspense>
   );
 }
