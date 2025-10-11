@@ -22,7 +22,8 @@ export async function GET(request: NextRequest) {
           id,
           full_name,
           date_of_birth,
-          whatsapp_number
+          whatsapp_number,
+          gender
         ),
         masterclasses (
           title
@@ -52,11 +53,19 @@ export async function GET(request: NextRequest) {
         const profile = Array.isArray(inscription.profiles) ? inscription.profiles[0] : inscription.profiles;
         const masterclass = Array.isArray(inscription.masterclasses) ? inscription.masterclasses[0] : inscription.masterclasses;
 
+        // Get email from auth
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const profileId = (profile as any)?.id;
+        const { data: authUser } = await supabase.auth.admin.getUserById(profileId);
+        const email = authUser?.user?.email || 'N/A';
+
         return {
           id: inscription.id,
           full_name: profile?.full_name || 'N/A',
+          email,
           date_of_birth: profile?.date_of_birth || 'N/A',
           whatsapp_number: profile?.whatsapp_number || 'N/A',
+          gender: profile?.gender || 'N/A',
           masterclass: masterclass?.title || 'N/A',
           validated: inscription.validated,
           registration_date: inscription.registration_date,

@@ -17,8 +17,10 @@ import { Download, Loader2, TrendingUp, TrendingDown, Minus } from 'lucide-react
 interface Student {
   id: string;
   full_name: string;
+  email: string;
   date_of_birth: string;
   whatsapp_number: string;
+  gender: string;
   masterclass: string;
   validated: boolean;
   registration_date: string;
@@ -166,29 +168,116 @@ export function StudentList() {
               Aucun étudiant inscrit pour le moment
             </div>
           ) : (
-            <div className="rounded-md border overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nom</TableHead>
-                    <TableHead>WhatsApp</TableHead>
-                    <TableHead>Statut</TableHead>
-                    <TableHead>Pré-Test</TableHead>
-                    <TableHead>Post-Test</TableHead>
-                    <TableHead>Progression</TableHead>
-                    <TableHead>Inscription</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {students.map((student) => (
-                    <TableRow key={student.id}>
-                      <TableCell className="font-medium">
-                        {student.full_name}
-                      </TableCell>
-                      <TableCell className="font-mono text-sm">
-                        {student.whatsapp_number}
-                      </TableCell>
-                      <TableCell>
+            <>
+              {/* Desktop Table View - hidden on mobile */}
+              <div className="hidden lg:block rounded-md border overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nom</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Téléphone</TableHead>
+                      <TableHead>Genre</TableHead>
+                      <TableHead>Statut</TableHead>
+                      <TableHead>Pré-Test</TableHead>
+                      <TableHead>Post-Test</TableHead>
+                      <TableHead>Progression</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {students.map((student) => (
+                      <TableRow key={student.id}>
+                        <TableCell className="font-medium">
+                          {student.full_name}
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {student.email}
+                        </TableCell>
+                        <TableCell className="font-mono text-sm">
+                          {student.whatsapp_number}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={student.gender === 'Homme' ? 'default' : 'secondary'}>
+                            {student.gender}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {student.validated ? (
+                            <Badge className="bg-accent text-accent-foreground">
+                              Validé
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary">En attente</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {student.pre_test_percentage > 0 ? (
+                            <div className="space-y-1">
+                              <div className="font-medium">{student.pre_test_score}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {student.pre_test_percentage}%
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground">Non passé</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {student.post_test_percentage > 0 ? (
+                            <div className="space-y-1">
+                              <div className="font-medium">{student.post_test_score}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {student.post_test_percentage}%
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground">Non passé</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {student.improvement !== null ? (
+                            <div className="flex items-center gap-1">
+                              {student.improvement > 0 ? (
+                                <>
+                                  <TrendingUp className="h-4 w-4 text-accent" />
+                                  <span className="text-accent font-medium">
+                                    +{student.improvement}%
+                                  </span>
+                                </>
+                              ) : student.improvement < 0 ? (
+                                <>
+                                  <TrendingDown className="h-4 w-4 text-destructive" />
+                                  <span className="text-destructive font-medium">
+                                    {student.improvement}%
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <Minus className="h-4 w-4 text-muted-foreground" />
+                                  <span className="text-muted-foreground">0%</span>
+                                </>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground">-</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile Card View - hidden on desktop */}
+              <div className="lg:hidden space-y-4">
+                {students.map((student) => (
+                  <Card key={student.id} className="border-2">
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="font-semibold text-lg">{student.full_name}</p>
+                          <p className="text-sm text-muted-foreground">{student.email}</p>
+                        </div>
                         {student.validated ? (
                           <Badge className="bg-accent text-accent-foreground">
                             Validé
@@ -196,67 +285,76 @@ export function StudentList() {
                         ) : (
                           <Badge variant="secondary">En attente</Badge>
                         )}
-                      </TableCell>
-                      <TableCell>
-                        {student.pre_test_percentage > 0 ? (
-                          <div className="space-y-1">
-                            <div className="font-medium">{student.pre_test_score}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {student.pre_test_percentage}%
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <p className="text-muted-foreground">Téléphone</p>
+                          <p className="font-mono">{student.whatsapp_number}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">Genre</p>
+                          <Badge variant={student.gender === 'Homme' ? 'default' : 'secondary'} className="mt-1">
+                            {student.gender}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <p className="text-muted-foreground">Pré-Test</p>
+                          {student.pre_test_percentage > 0 ? (
+                            <div>
+                              <p className="font-medium">{student.pre_test_score}</p>
+                              <p className="text-xs text-muted-foreground">{student.pre_test_percentage}%</p>
                             </div>
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground">Non passé</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {student.post_test_percentage > 0 ? (
-                          <div className="space-y-1">
-                            <div className="font-medium">{student.post_test_score}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {student.post_test_percentage}%
+                          ) : (
+                            <p className="text-muted-foreground">Non passé</p>
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">Post-Test</p>
+                          {student.post_test_percentage > 0 ? (
+                            <div>
+                              <p className="font-medium">{student.post_test_score}</p>
+                              <p className="text-xs text-muted-foreground">{student.post_test_percentage}%</p>
                             </div>
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground">Non passé</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {student.improvement !== null ? (
-                          <div className="flex items-center gap-1">
-                            {student.improvement > 0 ? (
-                              <>
-                                <TrendingUp className="h-4 w-4 text-accent" />
-                                <span className="text-accent font-medium">
-                                  +{student.improvement}%
-                                </span>
-                              </>
-                            ) : student.improvement < 0 ? (
-                              <>
-                                <TrendingDown className="h-4 w-4 text-destructive" />
-                                <span className="text-destructive font-medium">
-                                  {student.improvement}%
-                                </span>
-                              </>
-                            ) : (
-                              <>
-                                <Minus className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-muted-foreground">0%</span>
-                              </>
-                            )}
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground">-</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {new Date(student.registration_date).toLocaleDateString('fr-FR')}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                          ) : (
+                            <p className="text-muted-foreground">Non passé</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {student.improvement !== null && (
+                        <div className="flex items-center gap-2 pt-2 border-t">
+                          <p className="text-sm text-muted-foreground">Progression:</p>
+                          {student.improvement > 0 ? (
+                            <>
+                              <TrendingUp className="h-4 w-4 text-accent" />
+                              <span className="text-accent font-medium">
+                                +{student.improvement}%
+                              </span>
+                            </>
+                          ) : student.improvement < 0 ? (
+                            <>
+                              <TrendingDown className="h-4 w-4 text-destructive" />
+                              <span className="text-destructive font-medium">
+                                {student.improvement}%
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <Minus className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-muted-foreground">0%</span>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
