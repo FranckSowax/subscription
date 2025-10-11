@@ -16,8 +16,7 @@ function ConfirmationContent() {
     <div className="min-h-screen bg-gradient-to-b from-white to-secondary">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between gap-4">
-          <h1 className="text-2xl font-semibold text-primary">Masterclass IA</h1>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-end gap-4">
           <LoginButton />
         </div>
       </header>
