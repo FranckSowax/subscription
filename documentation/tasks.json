@@ -1,0 +1,338 @@
+[
+  {
+    "id": 1,
+    "title": "Project Setup and Database Schema",
+    "status": "pending",
+    "details": "Set up Next.js 14 with App Router, TypeScript, Tailwind CSS, and shadcn UI components. Configure Supabase client with authentication and database connections. Create database tables: 'inscriptions' (id, full_name, surname, date_of_birth, email, whatsapp, registration_valid, created_at), 'questions' (id, question_text, options, correct_answer, category, created_at), 'test_results' (id, student_id, test_type, score, answers, completed_at). Set up Supabase Auth policies for role-based access (admin/tutor roles). Configure Inter font and establish the blue/white/green color palette with Tailwind CSS custom theme.",
+    "priority": "high",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Initialize Next.js 14 Project with TypeScript and Dependencies",
+        "status": "pending",
+        "details": "Run 'npx create-next-app@latest' with TypeScript and App Router options. Install Tailwind CSS and configure tailwind.config.js with custom colors (blue: #0066CC, green: #00AA44, white: #FFFFFF). Initialize shadcn UI with 'npx shadcn-ui@latest init'. Configure Inter font in layout.tsx. Set up project structure with app directory and basic folder organization (components, lib, types).",
+        "description": "Create a new Next.js 14 project with App Router, configure TypeScript, install and set up Tailwind CSS, shadcn UI components, and configure the Inter font with custom blue/white/green color palette.",
+        "dependencies": [],
+        "testStrategy": "Verify project builds successfully with 'npm run build', check TypeScript compilation with no errors, validate Tailwind CSS classes work correctly, and ensure Inter font loads properly."
+      },
+      {
+        "id": 2,
+        "title": "Configure Supabase Client and Environment Setup",
+        "status": "pending",
+        "details": "Create Supabase project and obtain API keys. Install @supabase/supabase-js and @supabase/auth-helpers-nextjs. Create .env.local with NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY. Set up lib/supabase.ts with createClientComponentClient and createServerComponentClient. Configure middleware.ts for auth handling. Generate TypeScript types from Supabase schema.",
+        "description": "Set up Supabase project, install Supabase client libraries, configure environment variables, and establish database connection with proper TypeScript types.",
+        "dependencies": [
+          1
+        ],
+        "testStrategy": "Test database connection by creating a simple query, verify environment variables are loaded correctly, and ensure TypeScript types are generated and accessible."
+      },
+      {
+        "id": 3,
+        "title": "Create Database Schema and Tables",
+        "status": "pending",
+        "details": "Create 'inscriptions' table with columns: id (uuid primary key), full_name (text), surname (text), date_of_birth (date), email (text unique), whatsapp (text), registration_valid (boolean), created_at (timestamp). Create 'questions' table with: id (uuid primary key), question_text (text), options (jsonb), correct_answer (text), category (text), created_at (timestamp). Create 'test_results' table with: id (uuid primary key), student_id (uuid foreign key), test_type (text), score (integer), answers (jsonb), completed_at (timestamp). Add appropriate indexes and constraints.",
+        "description": "Design and implement the complete database schema including inscriptions, questions, and test_results tables with proper relationships, constraints, and indexes.",
+        "dependencies": [
+          2
+        ],
+        "testStrategy": "Verify all tables are created successfully, test foreign key relationships, validate data types and constraints, and ensure indexes are properly applied."
+      },
+      {
+        "id": 4,
+        "title": "Configure Supabase Authentication and Role-Based Access",
+        "status": "pending",
+        "details": "Enable Supabase Auth and configure authentication providers. Create custom claims for user roles (admin, tutor) in auth.users metadata. Implement RLS policies: inscriptions table accessible by admin/tutor roles, questions table readable by authenticated users but writable only by admin, test_results table accessible based on student ownership or admin/tutor roles. Create helper functions for role checking and user management. Set up auth middleware for protected routes.",
+        "description": "Set up Supabase Auth with role-based access control, create admin and tutor roles, and implement Row Level Security (RLS) policies for secure data access.",
+        "dependencies": [
+          3
+        ],
+        "testStrategy": "Test user registration and login flows, verify role assignment works correctly, validate RLS policies by attempting unauthorized access, and ensure protected routes redirect properly."
+      },
+      {
+        "id": 5,
+        "title": "Create TypeScript Types and Database Integration Layer",
+        "status": "pending",
+        "details": "Create types/database.ts with interfaces for Inscription, Question, TestResult, and User entities. Implement lib/database.ts with service functions for CRUD operations on each table. Add proper error handling and validation for database operations. Create utility functions for data transformation and validation. Set up database hooks or utilities for common queries. Ensure all database operations are properly typed and handle edge cases.",
+        "description": "Define comprehensive TypeScript interfaces for all database entities, create database service functions, and establish the data access layer with proper error handling.",
+        "dependencies": [
+          4
+        ],
+        "testStrategy": "Test all CRUD operations for each entity, verify TypeScript types match database schema, validate error handling for invalid operations, and ensure data transformation functions work correctly."
+      }
+    ],
+    "description": "Initialize Next.js 14 project with TypeScript, configure Supabase integration, and create the complete database schema for students, questions, and test results.",
+    "dependencies": [],
+    "testStrategy": "Verify database connections, test table creation and relationships, validate Supabase Auth configuration, and ensure proper TypeScript compilation with no errors."
+  },
+  {
+    "id": 2,
+    "title": "Student Registration System",
+    "status": "pending",
+    "details": "Create registration form with fields for full name, surname, date of birth, email, and WhatsApp number. Implement client-side validation using React Hook Form with Zod schema validation. Build API routes for user registration that create Supabase Auth users and insert records into the inscriptions table. Handle error cases like duplicate emails and provide clear French error messages. Implement responsive design following the specified color scheme and Inter font. Add privacy policy compliance notice and data handling consent.",
+    "priority": "high",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Create Registration Form UI with Responsive Design",
+        "status": "pending",
+        "details": "Create a React component with form fields for full name, surname, date of birth (date picker), email, and WhatsApp number. Implement responsive CSS using the specified color scheme and Inter font family. Add privacy policy compliance notice and data handling consent checkbox. Structure the form with proper accessibility attributes and mobile-first responsive breakpoints.",
+        "description": "Build the complete registration form interface with all required fields (full name, surname, date of birth, email, WhatsApp number) using responsive design principles and the specified color scheme with Inter font.",
+        "dependencies": [],
+        "testStrategy": "Test form rendering across different screen sizes, verify all fields are properly labeled and accessible, confirm color scheme and typography match specifications"
+      },
+      {
+        "id": 2,
+        "title": "Implement Client-Side Form Validation with React Hook Form and Zod",
+        "status": "pending",
+        "details": "Create Zod validation schema for all form fields including email format validation, required field checks, date of birth validation (age restrictions if any), and WhatsApp number format validation. Integrate React Hook Form with the Zod resolver. Implement real-time validation feedback with clear French error messages for each field type. Handle form state management and validation triggers.",
+        "description": "Set up comprehensive form validation using React Hook Form integrated with Zod schema validation for all registration fields with French error messages.",
+        "dependencies": [
+          1
+        ],
+        "testStrategy": "Test validation with invalid inputs for each field, verify French error messages display correctly, test real-time validation feedback and form submission prevention with invalid data"
+      },
+      {
+        "id": 3,
+        "title": "Create Supabase Auth User Registration API Route",
+        "status": "pending",
+        "details": "Create API endpoint (e.g., /api/auth/register) that accepts registration form data. Implement Supabase Auth user creation using the email and a generated password or passwordless flow. Handle Supabase Auth responses and errors. Set up proper error handling for duplicate emails and other Auth-related issues. Return appropriate success/error responses with French error messages.",
+        "description": "Build the backend API route that handles user registration by creating Supabase Auth users and managing authentication flow.",
+        "dependencies": [],
+        "testStrategy": "Test user creation in Supabase Auth dashboard, verify duplicate email handling, test API response formats and error cases"
+      },
+      {
+        "id": 4,
+        "title": "Implement Database Storage for Registration Data",
+        "status": "pending",
+        "details": "Extend the registration API route to insert user data into the inscriptions table after successful Supabase Auth user creation. Map form fields to database columns, handle database constraints and validation. Implement transaction-like behavior to ensure data consistency between Auth user and database record. Add proper error handling for database insertion failures with rollback considerations.",
+        "description": "Create the database insertion logic to store user registration data in the inscriptions table after successful Auth user creation.",
+        "dependencies": [
+          3
+        ],
+        "testStrategy": "Verify data insertion into inscriptions table, test data integrity and field mapping, confirm proper error handling for database failures"
+      },
+      {
+        "id": 5,
+        "title": "Integrate Frontend with Backend and Handle Error Cases",
+        "status": "pending",
+        "details": "Integrate the validated form with the registration API endpoint using proper HTTP client (fetch/axios). Implement loading states during registration process. Handle all possible error scenarios (network errors, validation errors, duplicate emails, server errors) with appropriate French error messages. Add success feedback and potential redirect after successful registration. Implement proper form reset and state management.",
+        "description": "Connect the registration form to the API endpoints and implement comprehensive error handling with user-friendly French error messages.",
+        "dependencies": [
+          2,
+          4
+        ],
+        "testStrategy": "Test complete registration flow end-to-end, verify error handling for all edge cases, test loading states and user feedback, confirm successful registration creates both Auth user and database record"
+      }
+    ],
+    "description": "Build the complete student registration flow including form validation, Supabase Auth user creation, and data storage.",
+    "dependencies": [
+      1
+    ],
+    "testStrategy": "Test form validation with various input combinations, verify user creation in Supabase Auth, confirm data insertion into inscriptions table, and test error handling for edge cases."
+  },
+  {
+    "id": 3,
+    "title": "Question Bank Management and GPT-4o Integration",
+    "status": "pending",
+    "details": "Build PDF upload interface with file validation and parsing capabilities. Integrate OpenAI GPT-4o API to automatically generate 10 multiple-choice questions from uploaded PDF content. Create question management interface for admins to review, edit, and manually add questions. Implement CRUD operations for the questions table with proper validation. Add batch processing for large PDFs with rate limiting considerations. Store questions with metadata including difficulty level and topic categorization. Implement fallback mechanisms for when AI generation fails.",
+    "priority": "medium",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "PDF Upload and Parsing Infrastructure",
+        "status": "pending",
+        "details": "Create file upload component with drag-and-drop functionality, implement file type validation (PDF only), size limits, and virus scanning. Use libraries like pdf-parse or PyPDF2 to extract text content from uploaded PDFs. Handle various PDF formats and encoding issues. Store uploaded files securely with proper naming conventions and metadata tracking.",
+        "description": "Implement PDF upload interface with file validation, parsing capabilities, and content extraction for question generation",
+        "dependencies": [],
+        "testStrategy": "Test with various PDF formats (text-based, scanned, encrypted), validate file size limits, verify content extraction accuracy, and test error handling for corrupted files"
+      },
+      {
+        "id": 2,
+        "title": "GPT-4o API Integration and Question Generation",
+        "status": "pending",
+        "details": "Set up OpenAI API client with proper authentication and configuration. Design prompts to generate 10 multiple-choice questions with 4 options each from PDF text. Implement chunking strategy for large documents to stay within token limits. Add retry logic, exponential backoff, and fallback mechanisms for API failures. Include rate limiting to respect API quotas and implement queue system for batch processing.",
+        "description": "Integrate OpenAI GPT-4o API to automatically generate multiple-choice questions from PDF content with proper error handling and rate limiting",
+        "dependencies": [
+          1
+        ],
+        "testStrategy": "Test API integration with sample PDF content, validate question quality and format, verify rate limiting functionality, and test error handling scenarios including API downtime"
+      },
+      {
+        "id": 3,
+        "title": "Question Database Schema and CRUD Operations",
+        "status": "pending",
+        "details": "Create questions table schema with fields for question text, options (A, B, C, D), correct answer, difficulty level, topic category, source PDF reference, creation timestamp, and metadata. Implement full CRUD operations with input validation, sanitization, and error handling. Add database indexes for efficient querying and implement soft delete functionality. Include audit trail for question modifications.",
+        "description": "Design and implement the questions database table with comprehensive CRUD operations and proper validation",
+        "dependencies": [],
+        "testStrategy": "Test all CRUD operations with various data inputs, validate database constraints and relationships, verify data integrity, and test concurrent access scenarios"
+      },
+      {
+        "id": 4,
+        "title": "Question Management Interface for Admins",
+        "status": "pending",
+        "details": "Create admin dashboard with question listing, search, and filtering by difficulty, topic, and source. Implement question editor with rich text support for formatting questions and options. Add bulk operations for approving, rejecting, or modifying AI-generated questions. Include question preview functionality and validation feedback. Implement pagination and sorting for large question sets.",
+        "description": "Build comprehensive admin interface for reviewing, editing, and manually managing questions with search and filtering capabilities",
+        "dependencies": [
+          3
+        ],
+        "testStrategy": "Test admin interface functionality across different browsers, validate search and filtering accuracy, verify bulk operations, and test user experience with large datasets"
+      },
+      {
+        "id": 5,
+        "title": "Batch Processing and Integration Workflow",
+        "status": "pending",
+        "details": "Create batch processing pipeline that handles PDF upload → content extraction → AI question generation → database storage → admin review workflow. Implement job queue system with status tracking, progress indicators, and notification system. Add monitoring dashboard for batch job status, success rates, and error tracking. Include cleanup mechanisms for failed jobs and temporary files.",
+        "description": "Implement end-to-end batch processing workflow that connects PDF upload, AI generation, and question management with proper monitoring",
+        "dependencies": [
+          2,
+          4
+        ],
+        "testStrategy": "Test complete workflow with multiple PDFs simultaneously, verify job queue functionality, validate status tracking accuracy, and test system performance under load"
+      }
+    ],
+    "description": "Develop the question bank system with PDF import functionality, GPT-4o integration for automatic question generation, and manual CRUD operations.",
+    "dependencies": [
+      1
+    ],
+    "testStrategy": "Test PDF parsing with various document formats, validate GPT-4o API integration with sample content, verify question CRUD operations, and test batch processing with rate limiting."
+  },
+  {
+    "id": 4,
+    "title": "QCM Testing System (Pre and Post)",
+    "status": "pending",
+    "details": "Create dynamic QCM interface that loads 10 questions from the database for both pre and post tests. Implement single-attempt logic with session management to prevent retakes. Build scoring algorithm that calculates results and generates detailed corrections showing correct answers and explanations. Create separate test result storage for pre and post tests. Implement automatic registration validation upon pre-test completion. Design responsive test interface with clear navigation and progress indicators. Add test completion confirmation and results display with French language support.",
+    "priority": "high",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Database Schema and Question Management System",
+        "status": "pending",
+        "details": "Design tables for questions (id, text, type, explanations), answers (id, question_id, text, is_correct), and test_configurations (test_type, question_count, time_limit). Create stored procedures or queries to randomly select 10 questions per test type. Implement question shuffling and answer randomization to prevent cheating. Add French language support in database schema.",
+        "description": "Create the database structure for storing QCM questions, answers, and test configurations. Implement question loading and randomization logic for both pre and post tests.",
+        "dependencies": [],
+        "testStrategy": "Test question randomization algorithms, verify 10 questions are loaded correctly for each test type, validate French character encoding"
+      },
+      {
+        "id": 2,
+        "title": "Session Management and Single-Attempt Logic",
+        "status": "pending",
+        "details": "Create session tracking tables (user_sessions, test_attempts) to store user test states. Implement middleware to check if user has already completed pre or post test. Add session validation and timeout handling. Create attempt logging system with timestamps and IP tracking. Implement secure session tokens and CSRF protection.",
+        "description": "Implement robust session management system to track test attempts and prevent multiple submissions for the same test type.",
+        "dependencies": [
+          1
+        ],
+        "testStrategy": "Test attempt prevention after completion, verify session timeout handling, validate security against multiple browser sessions"
+      },
+      {
+        "id": 3,
+        "title": "Dynamic QCM Interface with Progress Tracking",
+        "status": "pending",
+        "details": "Create React/Vue components for question display with multiple choice options. Implement progress bar showing current question number (X/10). Add previous/next navigation with answer validation. Design responsive layout for mobile and desktop. Include French language labels and instructions. Add question numbering and visual feedback for selected answers.",
+        "description": "Build the responsive frontend interface for displaying questions with navigation controls and real-time progress indicators.",
+        "dependencies": [
+          1,
+          2
+        ],
+        "testStrategy": "Test responsive design on various screen sizes, verify navigation functionality, validate French text display and accessibility"
+      },
+      {
+        "id": 4,
+        "title": "Scoring Algorithm and Results Calculation",
+        "status": "pending",
+        "details": "Implement scoring algorithm that compares user answers against correct answers. Calculate percentage scores and pass/fail status. Generate detailed correction reports showing correct answers, user selections, and explanations for each question. Create result summary with overall performance metrics. Store results in separate tables for pre and post tests with timestamps.",
+        "description": "Develop the scoring system that calculates test results and generates detailed corrections with explanations for each question.",
+        "dependencies": [
+          1,
+          2,
+          3
+        ],
+        "testStrategy": "Validate scoring accuracy with known answer sets, test correction generation, verify result storage integrity"
+      },
+      {
+        "id": 5,
+        "title": "Test Completion Flow and Registration Validation",
+        "status": "pending",
+        "details": "Create test submission endpoint that processes final answers and triggers scoring. Implement automatic registration validation logic that activates user account upon pre-test completion. Design results display page with score, corrections, and next steps. Add confirmation dialogs for test submission. Implement email notifications for test completion. Create separate result views for pre and post tests with appropriate messaging in French.",
+        "description": "Implement the complete test submission workflow including automatic registration validation upon pre-test completion and results display.",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "testStrategy": "Test complete submission workflow, verify automatic registration activation, validate email notifications, confirm proper result display"
+      }
+    ],
+    "description": "Build the complete testing interface for both pre-masterclass and post-masterclass QCMs with immediate scoring and corrections display.",
+    "dependencies": [
+      2,
+      3
+    ],
+    "testStrategy": "Test question loading and randomization, verify single-attempt enforcement, validate scoring accuracy, confirm automatic registration validation, and test responsive design across devices."
+  },
+  {
+    "id": 5,
+    "title": "WhatsApp Integration and Admin Dashboard",
+    "status": "pending",
+    "details": "Integrate Whapi WhatsApp API for automated notifications including registration confirmation, masterclass reminders, and test results. Implement retry logic and rate limiting for message delivery. Build comprehensive admin dashboard with role-based authentication (admin vs tutor permissions). Create paginated, filterable student list with search functionality by name, email, or registration date. Display pre and post-test scores with progress tracking. Implement CSV export functionality for all student data and test results. Add dashboard analytics showing registration counts and test completion rates. Ensure proper error handling and loading states throughout the dashboard.",
+    "priority": "medium",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Implement Whapi WhatsApp API Integration",
+        "status": "pending",
+        "details": "Configure Whapi API credentials and endpoints. Create notification service with message templates for different event types (registration, reminders, test results). Implement retry logic with exponential backoff for failed message deliveries. Add rate limiting to comply with WhatsApp API limits. Create message queue system for handling bulk notifications. Include proper error logging and monitoring for message delivery status.",
+        "description": "Set up the Whapi WhatsApp API integration with automated notification system for registration confirmations, masterclass reminders, and test results delivery.",
+        "dependencies": [],
+        "testStrategy": "Test message delivery with various phone number formats, verify retry logic with simulated API failures, test rate limiting under high load, and validate message templates with different user data"
+      },
+      {
+        "id": 2,
+        "title": "Build Authentication and Role-Based Access Control",
+        "status": "pending",
+        "details": "Create login/logout functionality with JWT token management. Implement role-based middleware to protect routes based on user permissions. Set up admin and tutor role definitions with specific access levels. Create user session management with automatic token refresh. Add password reset functionality and secure password hashing. Implement route guards for frontend components based on user roles.",
+        "description": "Implement secure authentication system with role-based access control distinguishing between admin and tutor permissions for the dashboard.",
+        "dependencies": [],
+        "testStrategy": "Test login/logout flows, verify role-based route protection, test session expiration handling, and validate unauthorized access attempts are properly blocked"
+      },
+      {
+        "id": 3,
+        "title": "Create Student Management Dashboard Interface",
+        "status": "pending",
+        "details": "Create responsive dashboard layout with navigation menu. Implement paginated student list with configurable page sizes. Add search functionality for filtering by name, email, or registration date. Create advanced filtering options with date ranges and status filters. Display student cards/rows with key information (name, email, registration date, test status). Implement sorting capabilities for different columns. Add loading states and error handling for data fetching operations.",
+        "description": "Build the main dashboard interface with paginated, filterable student list including search functionality and student data display.",
+        "dependencies": [
+          2
+        ],
+        "testStrategy": "Test pagination with large datasets, verify search and filtering accuracy, test responsive design on different screen sizes, and validate loading states during data operations"
+      },
+      {
+        "id": 4,
+        "title": "Implement Test Scores and Progress Tracking",
+        "status": "pending",
+        "details": "Create test results display components showing pre and post-test scores. Implement progress tracking visualization with charts or progress bars. Add individual student detail views with complete test history. Create analytics dashboard showing registration counts, test completion rates, and performance metrics. Implement data aggregation for dashboard statistics. Add date range filters for analytics views. Include export-ready data formatting for test results.",
+        "description": "Add comprehensive test score display and progress tracking functionality showing pre and post-test results with analytics.",
+        "dependencies": [
+          3
+        ],
+        "testStrategy": "Verify test score calculations and display accuracy, test progress tracking with various completion states, validate analytics data aggregation, and ensure performance with large datasets"
+      },
+      {
+        "id": 5,
+        "title": "Add CSV Export and Dashboard Analytics",
+        "status": "pending",
+        "details": "Create CSV export service that handles large datasets efficiently. Implement filtered export based on current dashboard filters and search criteria. Add export options for different data sets (all students, test results only, filtered results). Create downloadable file generation with proper CSV formatting and headers. Implement dashboard analytics with charts showing registration trends, completion rates, and performance metrics. Add real-time data updates and caching for improved performance. Include error handling for export failures and large file generation.",
+        "description": "Implement comprehensive CSV export functionality for all student data and test results, along with dashboard analytics and reporting features.",
+        "dependencies": [
+          4
+        ],
+        "testStrategy": "Test CSV export with various data sizes and filter combinations, verify file format and data accuracy, test download functionality across different browsers, and validate analytics calculations and chart displays"
+      }
+    ],
+    "description": "Implement Whapi WhatsApp notifications system and build the complete admin/tutor dashboard with role-based access and data export capabilities.",
+    "dependencies": [
+      4
+    ],
+    "testStrategy": "Test WhatsApp message delivery with various scenarios, verify role-based access controls, validate data filtering and pagination, test CSV export functionality, and ensure dashboard performance with large datasets."
+  }
+]
