@@ -93,7 +93,7 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
     );
   }
 
-  const { test, student, results, inscription_id } = result;
+  const { test, student, results } = result;
   const correctCount = results.filter((r) => r.is_correct).length;
 
   return (
@@ -146,12 +146,20 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
               </div>
 
               {test.type === 'PRE' && (
-                <div className="mt-6 p-4 bg-secondary rounded-lg text-center">
+                <div className="mt-6 p-4 bg-secondary rounded-lg text-center space-y-3">
                   <p className="text-sm">
                     ✅ Merci d&apos;avoir complété le test d&apos;évaluation !
                     <br />
-                    Votre session de masterclass a déjà été réservée. Vous recevrez tous les détails par WhatsApp.
+                    Votre session de masterclass a déjà été réservée.
                   </p>
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <p className="text-sm font-semibold text-primary">
+                      🔐 Pour accéder à votre dashboard :
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Connectez-vous avec votre email sur <strong>/student/login</strong>
+                    </p>
+                  </div>
                 </div>
               )}
             </CardContent>

@@ -50,7 +50,7 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
       } else {
         setError(data.error || 'Erreur lors du chargement des sessions');
       }
-    } catch (err) {
+    } catch {
       setError('Erreur de connexion');
     } finally {
       setIsLoading(false);
@@ -84,7 +84,7 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
       } else {
         setError(data.error || 'Erreur lors de la réservation');
       }
-    } catch (err) {
+    } catch {
       setError('Erreur de connexion');
     } finally {
       setIsBooking(false);
@@ -283,11 +283,10 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
             )}
           </Button>
 
-          <p className="text-xs text-muted-foreground text-center">
-            💡 Vous recevrez une confirmation par WhatsApp avec tous les détails de votre session
+          <p className="text-sm text-muted-foreground">
+            Vous recevrez une confirmation par email avec tous les détails.
           </p>
         </CardContent>
       </Card>
     </div>
   );
-}

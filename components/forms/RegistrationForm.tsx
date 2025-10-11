@@ -115,20 +115,18 @@ export function RegistrationForm() {
           {/* WhatsApp Number */}
           <div className="space-y-2">
             <Label htmlFor="whatsapp_number">
-              Numéro WhatsApp <span className="text-destructive">*</span>
+              Numéro de téléphone
             </Label>
             <Input
               id="whatsapp_number"
+              name="whatsapp_number"
               type="tel"
-              placeholder="+241XXXXXXXX"
+              placeholder="+237 6XX XX XX XX"
               {...register('whatsapp_number')}
               disabled={isLoading}
             />
-            {errors.whatsapp_number && (
-              <p className="text-sm text-destructive">{errors.whatsapp_number.message}</p>
-            )}
-            <p className="text-sm text-muted-foreground">
-              Format: +241 suivi de votre numéro (ex: +24177123456)
+            <p className="text-xs text-muted-foreground">
+              Nous utiliserons ce numéro pour vous contacter si nécessaire
             </p>
           </div>
 

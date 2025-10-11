@@ -147,7 +147,7 @@ export default function StudentDashboardPage() {
                     <span className="font-semibold">14:00 - 17:00</span>
                   </div>
                   <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
-                    📍 Vous recevrez les détails de connexion par WhatsApp
+                    📍 Les détails de la session vous seront communiqués par email
                   </div>
                 </div>
               ) : (

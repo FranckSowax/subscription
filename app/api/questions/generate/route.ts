@@ -69,12 +69,11 @@ export async function POST(request: NextRequest) {
 
     console.log('✓ File validation passed');
 
-    // Convert file to base64 for OpenAI
+    // Convert file to buffer for PDF parsing
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const base64Pdf = buffer.toString('base64');
 
-    console.log('📄 PDF converted to base64, ready for OpenAI');
+    console.log('📄 PDF converted to buffer, ready for parsing');
 
     // Note: GPT-4o with vision can't directly read PDFs via API
     // We'll use a simpler approach: extract text using a basic method
@@ -84,9 +83,9 @@ export async function POST(request: NextRequest) {
     try {
       console.log('📖 Attempting to parse PDF...');
       // Try to extract text - if it fails, we'll generate generic questions
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const pdfParse = require('pdf-parse');
-      const data = await pdfParse(buffer);
+      const pdfParse = await import('pdf-parse');
+      const pdfParseDefault = pdfParse.default || pdfParse;
+      const data = await pdfParseDefault(buffer);
       pdfText = data.text || '';
       console.log(`✓ PDF parsed: ${pdfText.length} characters`);
     } catch (error) {

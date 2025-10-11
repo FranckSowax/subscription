@@ -63,10 +63,10 @@ export default function Home() {
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="text-accent text-4xl mb-4">📱</div>
-              <h3 className="font-semibold text-lg mb-2">Notifications WhatsApp</h3>
+              <div className="text-accent text-4xl mb-4">🔐</div>
+              <h3 className="font-semibold text-lg mb-2">Connexion Simple</h3>
               <p className="text-muted-foreground">
-                Recevez toutes les informations importantes directement sur WhatsApp
+                Accédez à votre dashboard avec votre email d&apos;inscription
               </p>
             </div>
           </div>
