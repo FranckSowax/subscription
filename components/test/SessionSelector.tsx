@@ -77,10 +77,8 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('🎉 Votre place est réservée ! Vous recevrez une confirmation par WhatsApp.');
-        if (onSuccess) {
-          setTimeout(() => onSuccess(), 2000);
-        }
+        // Rediriger vers le test PRE
+        window.location.href = `/test/pre?inscription_id=${inscriptionId}`;
       } else {
         setError(data.error || 'Erreur lors de la réservation');
       }
@@ -284,7 +282,7 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
           </Button>
 
           <p className="text-sm text-muted-foreground">
-            Vous recevrez une confirmation par email avec tous les détails.
+            Après la réservation, vous passerez le test de pré-évaluation.
           </p>
         </CardContent>
       </Card>

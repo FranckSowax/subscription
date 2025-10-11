@@ -78,8 +78,13 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
         throw new Error(result.error || 'Erreur lors de la soumission du test');
       }
 
-      // Redirect to results page
-      router.push(`/test/results/${result.test_id}`);
+      // For PRE test, redirect to dashboard after submission
+      // For POST test, redirect to results page
+      if (testType === 'PRE') {
+        router.push(`/student/dashboard?test_completed=true`);
+      } else {
+        router.push(`/test/results/${result.test_id}`);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
       setIsSubmitting(false);

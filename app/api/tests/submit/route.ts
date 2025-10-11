@@ -116,50 +116,8 @@ export async function POST(request: NextRequest) {
         .eq('id', inscription_id);
     }
 
-    // Send WhatsApp notification
-    try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('full_name, whatsapp_number')
-        .eq('id', inscription.profile_id)
-        .single();
-
-      if (profile) {
-        const { sendWhatsAppMessage, WhatsAppTemplates } = await import('@/lib/whatsapp/whapi');
-        const percentage = Math.round((score / maxScore) * 100);
-
-        if (test_type === 'PRE') {
-          const message = score >= maxScore * 0.5
-            ? WhatsAppTemplates.preTestPassed(profile.full_name, score, percentage)
-            : WhatsAppTemplates.preTestFailed(profile.full_name, score, percentage);
-          
-          await sendWhatsAppMessage({
-            to: profile.whatsapp_number,
-            body: message,
-          });
-        } else {
-          // For POST test, calculate improvement if PRE test exists
-          const { data: preTest } = await supabase
-            .from('tests')
-            .select('score, max_score')
-            .eq('inscription_id', inscription_id)
-            .eq('type', 'PRE')
-            .single();
-
-          const improvement = preTest 
-            ? percentage - Math.round((preTest.score / preTest.max_score) * 100)
-            : 0;
-
-          await sendWhatsAppMessage({
-            to: profile.whatsapp_number,
-            body: WhatsAppTemplates.postTestCompleted(profile.full_name, score, percentage, improvement),
-          });
-        }
-      }
-    } catch (error) {
-      console.error('WhatsApp notification error:', error);
-      // Don't fail test submission if WhatsApp fails
-    }
+    // Note: WhatsApp notifications are disabled
+    // Students will see their results on the dashboard
 
     return NextResponse.json({
       success: true,
