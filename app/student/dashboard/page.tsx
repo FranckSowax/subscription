@@ -22,6 +22,7 @@ interface DashboardData {
   post_test_max_score: number | null;
   post_test_date: string | null;
   post_test_available: boolean;
+  post_test_unlocks_at: string | null;
 }
 
 export default function StudentDashboardPage() {
@@ -29,6 +30,7 @@ export default function StudentDashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState<string>('');
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -62,6 +64,44 @@ export default function StudentDashboardPage() {
 
     fetchDashboard();
   }, [router]);
+
+  // Countdown timer for POST test
+  useEffect(() => {
+    if (!data?.post_test_unlocks_at || data.post_test_available) {
+      return;
+    }
+
+    const updateCountdown = () => {
+      const now = new Date();
+      const unlockTime = new Date(data.post_test_unlocks_at!);
+      const diff = unlockTime.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        setCountdown('Disponible maintenant !');
+        // Refresh data to update availability
+        window.location.reload();
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      if (days > 0) {
+        setCountdown(`${days}j ${hours}h ${minutes}m ${seconds}s`);
+      } else if (hours > 0) {
+        setCountdown(`${hours}h ${minutes}m ${seconds}s`);
+      } else {
+        setCountdown(`${minutes}m ${seconds}s`);
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [data]);
 
   const handleLogout = () => {
     router.push('/');
@@ -231,13 +271,21 @@ export default function StudentDashboardPage() {
                 </div>
               ) : (
                 <div className="text-center space-y-4">
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <Clock className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                    <p className="text-muted-foreground">Test non disponible</p>
-                    <p className="text-sm text-muted-foreground mt-2">
+                  <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                    <Clock className="h-10 w-10 mx-auto text-orange-600 mb-3" />
+                    <p className="font-semibold text-orange-900 mb-2">⏳ Test verrouillé</p>
+                    <p className="text-sm text-orange-800 mb-3">
                       Ce test sera disponible après votre masterclass
-                      {data.session_date && ` le ${formatDate(data.session_date)}`}
+                      {data.session_date && ` le ${formatDate(data.session_date)} à 15h00`}
                     </p>
+                    {countdown && (
+                      <div className="mt-4 p-3 bg-white rounded-lg border-2 border-orange-300">
+                        <p className="text-xs text-orange-700 mb-1">Disponible dans :</p>
+                        <p className="text-2xl font-bold text-orange-600 font-mono tracking-wide">
+                          {countdown}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

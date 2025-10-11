@@ -86,6 +86,21 @@ export async function GET(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const session = sessionBooking ? (sessionBooking as any).sessions : null;
 
+    // Check if POST test should be available
+    // POST test is available only after 15:00 on the session date
+    let postTestAvailable = false;
+    let postTestUnlocksAt: string | null = null;
+
+    if (preTest && !postTest && session?.session_date) {
+      const sessionDate = new Date(session.session_date);
+      // Set session end time to 15:00 (3 PM)
+      sessionDate.setHours(15, 0, 0, 0);
+      postTestUnlocksAt = sessionDate.toISOString();
+      
+      const now = new Date();
+      postTestAvailable = now >= sessionDate;
+    }
+
     const dashboardData = {
       full_name: profile?.full_name || 'N/A',
       email: authUser?.user?.email || 'N/A',
@@ -99,7 +114,8 @@ export async function GET(request: NextRequest) {
       post_test_score: postTest?.score || null,
       post_test_max_score: postTest?.max_score || null,
       post_test_date: postTest?.taken_at || null,
-      post_test_available: !!preTest && !postTest,
+      post_test_available: postTestAvailable,
+      post_test_unlocks_at: postTestUnlocksAt,
     };
 
     return NextResponse.json({ success: true, data: dashboardData });
