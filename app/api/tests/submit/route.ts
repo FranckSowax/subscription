@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     // Check if inscription exists
     const { data: inscription, error: inscriptionError } = await supabase
       .from('inscriptions')
-      .select('*, masterclasses(id)')
+      .select('*, masterclasses(id), profiles(id)')
       .eq('id', inscription_id)
       .single();
 
@@ -39,6 +39,12 @@ export async function POST(request: NextRequest) {
         { status: 404 }
       );
     }
+
+    // Get user email
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const profileId = (inscription as any).profiles?.id;
+    const { data: authUser } = await supabase.auth.admin.getUserById(profileId);
+    const userEmail = authUser?.user?.email || '';
 
     // Check if test already taken
     const { data: existingTest } = await supabase
@@ -126,6 +132,7 @@ export async function POST(request: NextRequest) {
       max_score: maxScore,
       percentage: Math.round((score / maxScore) * 100),
       passed: test_type === 'PRE' ? score >= maxScore * 0.5 : true,
+      email: userEmail,
     });
   } catch (error) {
     console.error('Submit test error:', error);

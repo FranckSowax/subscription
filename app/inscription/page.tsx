@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { RegistrationForm } from '@/components/forms/RegistrationForm';
+import { LoginButton } from '@/components/ui/LoginButton';
 import { ArrowLeft } from 'lucide-react';
 
 export default function InscriptionPage() {
@@ -8,15 +9,18 @@ export default function InscriptionPage() {
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Retour
-            </Link>
-            <h1 className="text-2xl font-semibold text-primary">Masterclass IA</h1>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Retour
+              </Link>
+              <h1 className="text-2xl font-semibold text-primary">Masterclass IA</h1>
+            </div>
+            <LoginButton />
           </div>
         </div>
       </header>
