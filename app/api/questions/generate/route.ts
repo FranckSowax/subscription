@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       console.log('📖 Attempting to parse PDF...');
       // Try to extract text - if it fails, we'll generate generic questions
       const pdfParse = await import('pdf-parse');
-      // @ts-ignore - pdf-parse is a CommonJS module
+      // @ts-expect-error - pdf-parse is a CommonJS module
       const pdfParseFunc = pdfParse.default || pdfParse;
       const data = await pdfParseFunc(buffer);
       pdfText = data.text || '';
