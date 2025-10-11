@@ -170,7 +170,7 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
             Choisissez votre date de masterclass
           </CardTitle>
           <CardDescription>
-            Sélectionnez la date qui vous convient le mieux. Chaque session accueille maximum 25 participants.
+            Sélectionnez la date qui vous convient le mieux. 12 sessions disponibles, 25 places par session (300 places au total).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
