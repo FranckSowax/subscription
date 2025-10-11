@@ -1,12 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
+import { FlipLogo } from "@/components/ui/FlipLogo";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-secondary">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
+          <FlipLogo />
           <h1 className="text-2xl font-semibold text-primary">Masterclass IA</h1>
         </div>
       </header>

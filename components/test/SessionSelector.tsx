@@ -100,6 +100,10 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
     return date.toLocaleDateString('fr-FR', options);
   };
 
+  const getSessionTime = () => {
+    return '9h00 - 13h00';
+  };
+
   const getMonthSessions = (month: string) => {
     return sessions.filter((session) => {
       const date = new Date(session.session_date);
@@ -188,8 +192,14 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
                   `}
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <div className="font-semibold text-foreground">
-                      {formatDate(session.session_date)}
+                    <div>
+                      <div className="font-semibold text-foreground">
+                        {formatDate(session.session_date)}
+                      </div>
+                      <div className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {getSessionTime()}
+                      </div>
                     </div>
                     {selectedSession === session.id && (
                       <CheckCircle className="h-5 w-5 text-primary" />
@@ -225,8 +235,14 @@ export function SessionSelector({ inscriptionId, onSuccess }: SessionSelectorPro
                   `}
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <div className="font-semibold text-foreground">
-                      {formatDate(session.session_date)}
+                    <div>
+                      <div className="font-semibold text-foreground">
+                        {formatDate(session.session_date)}
+                      </div>
+                      <div className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {getSessionTime()}
+                      </div>
                     </div>
                     {selectedSession === session.id && (
                       <CheckCircle className="h-5 w-5 text-primary" />
