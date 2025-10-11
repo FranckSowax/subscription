@@ -32,26 +32,21 @@ export default function StudentDashboardPage() {
 
   useEffect(() => {
     const fetchDashboard = async () => {
-      const token = localStorage.getItem('student_token');
+      const searchParams = new URLSearchParams(window.location.search);
+      const inscriptionId = searchParams.get('inscription_id');
       
-      if (!token) {
-        router.push('/student/login');
+      if (!inscriptionId) {
+        router.push('/');
         return;
       }
 
       try {
-        const response = await fetch('/api/student/dashboard', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
+        const response = await fetch(`/api/student/dashboard?inscription_id=${inscriptionId}`);
         const result = await response.json();
 
         if (!response.ok) {
-          if (response.status === 401) {
-            localStorage.removeItem('student_token');
-            router.push('/student/login');
+          if (response.status === 401 || response.status === 404) {
+            router.push('/');
             return;
           }
           throw new Error(result.error || 'Erreur de chargement');
@@ -69,8 +64,7 @@ export default function StudentDashboardPage() {
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('student_token');
-    router.push('/student/login');
+    router.push('/');
   };
 
   if (isLoading) {
@@ -88,8 +82,8 @@ export default function StudentDashboardPage() {
           <CardContent className="pt-6">
             <div className="text-center space-y-4">
               <p className="text-destructive">{error || 'Erreur de chargement'}</p>
-              <Button onClick={() => router.push('/student/login')}>
-                Retour à la connexion
+              <Button onClick={() => router.push('/')}>
+                Retour à l'accueil
               </Button>
             </div>
           </CardContent>

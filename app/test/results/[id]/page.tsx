@@ -153,11 +153,11 @@ export default function TestResultsPage({ params }: { params: Promise<{ id: stri
                     Votre session de masterclass a déjà été réservée.
                   </p>
                   <div className="p-3 bg-primary/10 rounded-lg">
-                    <p className="text-sm font-semibold text-primary">
-                      🔐 Pour accéder à votre dashboard :
+                    <p className="text-sm font-medium text-muted-foreground">
+                      🔐 Pour accéder à votre profil :
                     </p>
                     <p className="text-xs text-muted-foreground mt-2">
-                      Connectez-vous avec votre email sur <strong>/student/login</strong>
+                      Utilisez le bouton <strong>&quot;Se connecter&quot;</strong> en haut de la page et entrez votre email
                     </p>
                   </div>
                 </div>
