@@ -7,9 +7,13 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize OpenAI only if API key is available
+let openai: OpenAI | null = null;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 interface GeneratedQuestion {
   question_text: string;
@@ -24,6 +28,14 @@ interface GeneratedQuestion {
 
 export async function POST() {
   try {
+    // Check if OpenAI is configured
+    if (!openai) {
+      return NextResponse.json(
+        { error: 'OpenAI API key not configured. This feature is disabled.' },
+        { status: 503 }
+      );
+    }
+
     console.log('🧪 Testing OpenAI connection...');
 
     // Get default masterclass
