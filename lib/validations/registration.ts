@@ -13,10 +13,10 @@ export const registrationSchema = z.object({
   
   whatsapp_number: z
     .string()
-    .min(1, 'Le numéro WhatsApp est requis')
+    .min(1, 'Le numéro de téléphone est requis')
     .regex(
       /^\+?[0-9]{8,15}$/,
-      'Veuillez entrer un numéro WhatsApp valide (ex: +241XXXXXXXX)'
+      'Veuillez entrer un numéro valide (ex: +241XXXXXXXX)'
     ),
   
   consent: z

@@ -104,7 +104,7 @@ export function RegistrationForm() {
             <Input
               id="whatsapp_number"
               type="tel"
-              placeholder="+237 6XX XX XX XX"
+              placeholder="+241 XX XX XX XX"
               {...register('whatsapp_number')}
               disabled={isLoading}
             />
