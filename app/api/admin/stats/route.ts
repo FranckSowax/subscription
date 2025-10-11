@@ -30,7 +30,7 @@ export async function GET() {
     // Get all inscriptions
     const { data: inscriptions } = await supabase
       .from('inscriptions')
-      .select('profile_id, validated, registration_date');
+      .select('id, profile_id, validated, registration_date');
 
     // Get all tests
     const { data: tests } = await supabase

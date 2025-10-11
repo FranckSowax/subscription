@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Users, UserCheck, UserX, Award, TrendingUp, Loader2, Download } from 'lucide-react';
+import { ArrowLeft, Users, UserCheck, Award, TrendingUp, Loader2, Download } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
