@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Users, Download, Loader2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Users, Download, Loader2, Printer } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -76,6 +76,189 @@ export default function AdminSessionsPage() {
     link.href = URL.createObjectURL(blob);
     link.download = `session_${session.session_date}_participants.csv`;
     link.click();
+  };
+
+  const printSessionList = (session: SessionWithParticipants) => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const participantsHTML = session.participants.map((p, index) => `
+      <tr style="border-bottom: 1px solid #e5e7eb;">
+        <td style="padding: 12px 8px; text-align: center;">${index + 1}</td>
+        <td style="padding: 12px 8px;">${p.full_name}</td>
+        <td style="padding: 12px 8px; font-size: 0.875rem;">${p.email}</td>
+        <td style="padding: 12px 8px;">${p.whatsapp_number}</td>
+        <td style="padding: 12px 8px; text-align: center;">${new Date(p.registration_date).toLocaleDateString('fr-FR')}</td>
+        <td style="padding: 12px 8px; text-align: center; font-weight: 600; color: #FF6B57;">${p.pre_test_score !== null ? `${p.pre_test_score}/10` : 'N/A'}</td>
+        <td style="padding: 12px 8px; text-align: center;">
+          <span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; ${p.validated ? 'background: #dcfce7; color: #16a34a;' : 'background: #f3f4f6; color: #6b7280;'}">
+            ${p.validated ? 'Validé' : 'En attente'}
+          </span>
+        </td>
+      </tr>
+    `).join('');
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Liste des participants - ${formatDate(session.session_date)}</title>
+          <style>
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+              padding: 40px;
+              color: #1f2937;
+            }
+            .header {
+              margin-bottom: 30px;
+              padding-bottom: 20px;
+              border-bottom: 3px solid #FF6B57;
+            }
+            .header h1 {
+              font-size: 28px;
+              color: #FF6B57;
+              margin-bottom: 8px;
+            }
+            .header .subtitle {
+              font-size: 18px;
+              color: #6b7280;
+              font-weight: 500;
+            }
+            .info-box {
+              background: #f9fafb;
+              border: 1px solid #e5e7eb;
+              border-radius: 8px;
+              padding: 16px;
+              margin-bottom: 24px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+            .info-item {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+            }
+            .info-label {
+              font-size: 0.875rem;
+              color: #6b7280;
+              font-weight: 500;
+            }
+            .info-value {
+              font-size: 1.25rem;
+              font-weight: 700;
+              color: #1f2937;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              border: 1px solid #e5e7eb;
+              border-radius: 8px;
+              overflow: hidden;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            }
+            thead {
+              background: linear-gradient(135deg, #FF6B57 0%, #FF8A7A 100%);
+              color: white;
+            }
+            thead th {
+              padding: 16px 8px;
+              text-align: left;
+              font-weight: 600;
+              font-size: 0.875rem;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+            tbody tr:nth-child(even) {
+              background: #f9fafb;
+            }
+            tbody tr:hover {
+              background: #f3f4f6;
+            }
+            .footer {
+              margin-top: 40px;
+              padding-top: 20px;
+              border-top: 2px solid #e5e7eb;
+              text-align: center;
+              color: #6b7280;
+              font-size: 0.875rem;
+            }
+            @media print {
+              body {
+                padding: 20px;
+              }
+              .header h1 {
+                font-size: 24px;
+              }
+              table {
+                page-break-inside: auto;
+              }
+              tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>📋 Liste des Participants</h1>
+            <div class="subtitle">Masterclass IA - ${formatDate(session.session_date)}</div>
+          </div>
+          
+          <div class="info-box">
+            <div class="info-item">
+              <span class="info-label">Date de la session</span>
+              <span class="info-value">${formatDate(session.session_date)}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Horaires</span>
+              <span class="info-value">9h00 - 15h00</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Participants</span>
+              <span class="info-value">${session.current_participants}/${session.max_participants}</span>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align: center; width: 50px;">#</th>
+                <th style="width: 180px;">Nom Complet</th>
+                <th style="width: 220px;">Email</th>
+                <th style="width: 130px;">Téléphone</th>
+                <th style="text-align: center; width: 120px;">Inscription</th>
+                <th style="text-align: center; width: 100px;">Score PRE</th>
+                <th style="text-align: center; width: 110px;">Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${participantsHTML}
+            </tbody>
+          </table>
+
+          <div class="footer">
+            <p><strong>STUDIA CCPE</strong> - Masterclass Intelligence Artificielle 2025</p>
+            <p style="margin-top: 8px;">Document généré le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}</p>
+          </div>
+        </body>
+      </html>
+    `;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+    
+    // Attendre que le contenu soit chargé avant d'imprimer
+    printWindow.onload = () => {
+      printWindow.print();
+    };
   };
 
   if (isLoading) {
@@ -171,10 +354,19 @@ export default function AdminSessionsPage() {
                       {selectedSessionData.current_participants} participant(s) inscrit(s)
                     </CardDescription>
                   </div>
-                  <Button onClick={() => exportSessionCSV(selectedSessionData)}>
-                    <Download className="h-4 w-4 mr-2" />
-                    Exporter CSV
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => printSessionList(selectedSessionData)}
+                    >
+                      <Printer className="h-4 w-4 mr-2" />
+                      Imprimer la liste
+                    </Button>
+                    <Button onClick={() => exportSessionCSV(selectedSessionData)}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Exporter CSV
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-6">
