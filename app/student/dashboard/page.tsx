@@ -12,7 +12,10 @@ interface DashboardData {
   full_name: string;
   email: string;
   inscription_date: string;
+  masterclass_title: string;
+  masterclass_description: string | null;
   session_date: string | null;
+  session_id: string | null;
   pre_test_id: string | null;
   pre_test_score: number | null;
   pre_test_max_score: number | null;
@@ -161,7 +164,7 @@ export default function StudentDashboardPage() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
-          {/* Session Info */}
+          {/* Masterclass & Session Info */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -170,23 +173,42 @@ export default function StudentDashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {data.session_date ? (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Date :</span>
-                    <span className="font-semibold">{formatDate(data.session_date)}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Horaire :</span>
-                    <span className="font-semibold">14:00 - 17:00</span>
-                  </div>
-                  <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
-                    📍 Les détails de la session vous seront communiqués par email
-                  </div>
+              <div className="space-y-4">
+                {/* Masterclass Title */}
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Formation :</p>
+                  <p className="font-semibold text-lg text-primary">{data.masterclass_title}</p>
+                  {data.masterclass_description && (
+                    <p className="text-sm text-muted-foreground mt-1">{data.masterclass_description}</p>
+                  )}
                 </div>
-              ) : (
-                <p className="text-muted-foreground">Aucune session réservée</p>
-              )}
+
+                {/* Session Date */}
+                {data.session_date ? (
+                  <>
+                    <div className="border-t pt-4">
+                      <p className="text-sm text-muted-foreground mb-3">Session réservée :</p>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">📅 Date :</span>
+                          <span className="font-semibold">{formatDate(data.session_date)}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">⏰ Horaire :</span>
+                          <span className="font-semibold">14:00 - 17:00</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
+                      📍 Les détails de connexion vous seront communiqués par email avant la session
+                    </div>
+                  </>
+                ) : (
+                  <div className="border-t pt-4">
+                    <p className="text-muted-foreground text-center py-2">⚠️ Aucune session réservée</p>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
 

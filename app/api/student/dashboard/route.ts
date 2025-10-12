@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get inscription with profile and session info
+    // Get inscription with profile and masterclass info
     const { data: inscription, error: inscriptionError } = await supabase
       .from('inscriptions')
       .select(`
@@ -26,10 +26,16 @@ export async function GET(request: NextRequest) {
         validated,
         registration_date,
         profile_id,
+        masterclass_id,
         profiles (
           full_name,
           whatsapp_number,
           gender
+        ),
+        masterclasses (
+          id,
+          title,
+          description
         )
       `)
       .eq('id', inscriptionId)
@@ -43,16 +49,22 @@ export async function GET(request: NextRequest) {
     }
 
     // Get session booking
-    const { data: sessionBooking } = await supabase
+    const { data: sessionBooking, error: sessionError } = await supabase
       .from('session_bookings')
       .select(`
+        session_id,
         sessions (
+          id,
           session_date,
-          max_participants
+          max_participants,
+          masterclass_id
         )
       `)
       .eq('inscription_id', inscriptionId)
       .single();
+
+    console.log('Session booking data:', sessionBooking);
+    console.log('Session booking error:', sessionError);
 
     // Get tests
     const { data: tests } = await supabase
@@ -85,6 +97,8 @@ export async function GET(request: NextRequest) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const session = sessionBooking ? (sessionBooking as any).sessions : null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const masterclass = (inscription as any).masterclasses;
 
     // Check if POST test should be available
     // POST test is available only after 15:00 on the session date
@@ -105,7 +119,10 @@ export async function GET(request: NextRequest) {
       full_name: profile?.full_name || 'N/A',
       email: authUser?.user?.email || 'N/A',
       inscription_date: inscription.registration_date,
+      masterclass_title: masterclass?.title || 'N/A',
+      masterclass_description: masterclass?.description || null,
       session_date: session?.session_date || null,
+      session_id: session?.id || null,
       pre_test_id: preTestData?.id || null,
       pre_test_score: preTest?.score || null,
       pre_test_max_score: preTest?.max_score || null,
