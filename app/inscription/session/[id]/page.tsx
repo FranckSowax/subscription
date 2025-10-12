@@ -45,9 +45,9 @@ export default function SessionSelectionPage({ params }: { params: Promise<{ id:
               <br />
               <strong className="text-primary">1. Choisir votre date de masterclass</strong>
               <br />
-              <strong className="text-primary">2. Passer le test d&apos;évaluation (score minimum : 50%)</strong>
+              <strong className="text-primary">2. Passer le test d&apos;évaluation</strong>
               <br />
-              <span className="text-sm">⚠️ Votre inscription ne sera validée qu&apos;après la réussite du test.</span>
+              <span className="text-sm">✅ Votre inscription sera validée automatiquement après le test.</span>
             </p>
           </div>
 
@@ -58,9 +58,9 @@ export default function SessionSelectionPage({ params }: { params: Promise<{ id:
           />
 
           {/* Info */}
-          <div className="bg-orange-50 border-2 border-orange-300 rounded-lg p-6 text-center">
-            <p className="text-sm text-orange-900">
-              ⚠️ <strong>Important :</strong> Après avoir choisi votre date, vous devrez passer un test d&apos;évaluation de 10 questions (30 secondes par question). Un score minimum de 50% est requis pour valider définitivement votre inscription.
+          <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-6 text-center">
+            <p className="text-sm text-blue-900">
+              💡 <strong>À savoir :</strong> Après avoir choisi votre date, vous passerez un test d&apos;évaluation de 10 questions (30 secondes par question). Ce test nous permet d&apos;adapter le contenu de la masterclass à votre niveau. Votre inscription sera validée automatiquement.
             </p>
           </div>
         </div>

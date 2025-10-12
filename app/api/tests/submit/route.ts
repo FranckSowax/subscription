@@ -114,8 +114,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // If PRE test and score is sufficient, validate inscription
-    if (test_type === 'PRE' && score >= maxScore * 0.5) {
+    // If PRE test, always validate inscription (no minimum score required)
+    if (test_type === 'PRE') {
       await supabase
         .from('inscriptions')
         .update({ validated: true })
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
       score,
       max_score: maxScore,
       percentage: Math.round((score / maxScore) * 100),
-      passed: test_type === 'PRE' ? score >= maxScore * 0.5 : true,
+      passed: true, // No minimum score required
       email: userEmail,
     });
   } catch (error) {

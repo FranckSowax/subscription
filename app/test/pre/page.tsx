@@ -111,7 +111,7 @@ function PreTestContent() {
         <div className="mb-8 text-center space-y-3">
           <h2 className="text-3xl font-bold">Évaluez vos connaissances</h2>
           <p className="text-muted-foreground">
-            Répondez aux 10 questions suivantes. Score minimum requis : 50%
+            Répondez aux 10 questions suivantes pour évaluer vos connaissances
           </p>
           <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-4 max-w-2xl mx-auto">
             <p className="text-sm font-semibold text-primary flex items-center justify-center gap-2">
