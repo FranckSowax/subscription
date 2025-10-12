@@ -12,7 +12,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Download, Loader2, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { Download, Loader2, TrendingUp, TrendingDown, Minus, Filter, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface Student {
   id: string;
@@ -39,6 +41,17 @@ export function StudentList() {
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Filtres
+  const [searchName, setSearchName] = useState('');
+  const [filterGender, setFilterGender] = useState<string>('all');
+  const [filterField, setFilterField] = useState<string>('all');
+  const [filterLevel, setFilterLevel] = useState<string>('all');
+  const [filterValidated, setFilterValidated] = useState<string>('all');
+  const [filterScore, setFilterScore] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('registration_date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
     fetchStudents();
@@ -78,6 +91,109 @@ export function StudentList() {
     }
   };
 
+  // Fonction de filtrage et tri
+  const getFilteredAndSortedStudents = () => {
+    let filtered = [...students];
+
+    // Filtre par nom
+    if (searchName) {
+      filtered = filtered.filter((s) =>
+        s.full_name.toLowerCase().includes(searchName.toLowerCase()) ||
+        s.email.toLowerCase().includes(searchName.toLowerCase())
+      );
+    }
+
+    // Filtre par genre
+    if (filterGender !== 'all') {
+      filtered = filtered.filter((s) => s.gender === filterGender);
+    }
+
+    // Filtre par filière
+    if (filterField !== 'all') {
+      filtered = filtered.filter((s) => s.field_of_study === filterField);
+    }
+
+    // Filtre par niveau
+    if (filterLevel !== 'all') {
+      filtered = filtered.filter((s) => s.education_level === filterLevel);
+    }
+
+    // Filtre par statut de validation
+    if (filterValidated !== 'all') {
+      filtered = filtered.filter((s) => 
+        filterValidated === 'validated' ? s.validated : !s.validated
+      );
+    }
+
+    // Filtre par score
+    if (filterScore !== 'all') {
+      filtered = filtered.filter((s) => {
+        const score = s.pre_test_percentage;
+        switch (filterScore) {
+          case 'low': return score > 0 && score < 50;
+          case 'medium': return score >= 50 && score < 75;
+          case 'high': return score >= 75;
+          case 'not_taken': return score === 0;
+          default: return true;
+        }
+      });
+    }
+
+    // Tri
+    filtered.sort((a, b) => {
+      let aValue: number | string = 0;
+      let bValue: number | string = 0;
+
+      switch (sortBy) {
+        case 'name':
+          aValue = a.full_name.toLowerCase();
+          bValue = b.full_name.toLowerCase();
+          break;
+        case 'pre_score':
+          aValue = a.pre_test_percentage;
+          bValue = b.pre_test_percentage;
+          break;
+        case 'post_score':
+          aValue = a.post_test_percentage;
+          bValue = b.post_test_percentage;
+          break;
+        case 'improvement':
+          aValue = a.improvement || -999;
+          bValue = b.improvement || -999;
+          break;
+        case 'registration_date':
+          aValue = new Date(a.registration_date).getTime();
+          bValue = new Date(b.registration_date).getTime();
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return filtered;
+  };
+
+  const filteredStudents = getFilteredAndSortedStudents();
+
+  // Extraire les valeurs uniques pour les filtres
+  const uniqueFields = Array.from(new Set(students.map(s => s.field_of_study).filter(Boolean)));
+  const uniqueLevels = Array.from(new Set(students.map(s => s.education_level).filter(Boolean)));
+
+  const resetFilters = () => {
+    setSearchName('');
+    setFilterGender('all');
+    setFilterField('all');
+    setFilterLevel('all');
+    setFilterValidated('all');
+    setFilterScore('all');
+    setSortBy('registration_date');
+    setSortOrder('desc');
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -90,6 +206,7 @@ export function StudentList() {
 
   const stats = {
     total: students.length,
+    filtered: filteredStudents.length,
     validated: students.filter((s) => s.validated).length,
     preTestCompleted: students.filter((s) => s.pre_test_percentage > 0).length,
     postTestCompleted: students.filter((s) => s.post_test_percentage > 0).length,
@@ -144,11 +261,178 @@ export function StudentList() {
         </Card>
       </div>
 
+      {/* Filters */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Filter className="h-5 w-5" />
+              Filtres et Tri
+            </CardTitle>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                {showFilters ? <X className="h-4 w-4 mr-2" /> : <Filter className="h-4 w-4 mr-2" />}
+                {showFilters ? 'Masquer' : 'Afficher'}
+              </Button>
+              {(searchName || filterGender !== 'all' || filterField !== 'all' || filterLevel !== 'all' || filterValidated !== 'all' || filterScore !== 'all' || sortBy !== 'registration_date') && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={resetFilters}
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Réinitialiser
+                </Button>
+              )}
+            </div>
+          </div>
+        </CardHeader>
+        {showFilters && (
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {/* Recherche par nom */}
+              <div className="space-y-2">
+                <Label htmlFor="search">Recherche</Label>
+                <Input
+                  id="search"
+                  placeholder="Nom ou email..."
+                  value={searchName}
+                  onChange={(e) => setSearchName(e.target.value)}
+                />
+              </div>
+
+              {/* Filtre Genre */}
+              <div className="space-y-2">
+                <Label htmlFor="gender">Genre</Label>
+                <select
+                  id="gender"
+                  value={filterGender}
+                  onChange={(e) => setFilterGender(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="all">Tous</option>
+                  <option value="Homme">Homme</option>
+                  <option value="Femme">Femme</option>
+                </select>
+              </div>
+
+              {/* Filtre Filière */}
+              <div className="space-y-2">
+                <Label htmlFor="field">Filière</Label>
+                <select
+                  id="field"
+                  value={filterField}
+                  onChange={(e) => setFilterField(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="all">Toutes</option>
+                  {uniqueFields.map((field) => (
+                    <option key={field} value={field!}>{field}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Filtre Niveau */}
+              <div className="space-y-2">
+                <Label htmlFor="level">Niveau</Label>
+                <select
+                  id="level"
+                  value={filterLevel}
+                  onChange={(e) => setFilterLevel(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="all">Tous</option>
+                  {uniqueLevels.map((level) => (
+                    <option key={level} value={level!}>{level}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Filtre Statut */}
+              <div className="space-y-2">
+                <Label htmlFor="validated">Statut</Label>
+                <select
+                  id="validated"
+                  value={filterValidated}
+                  onChange={(e) => setFilterValidated(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="all">Tous</option>
+                  <option value="validated">Validés</option>
+                  <option value="pending">En attente</option>
+                </select>
+              </div>
+
+              {/* Filtre Score */}
+              <div className="space-y-2">
+                <Label htmlFor="score">Score PRÉ-Test</Label>
+                <select
+                  id="score"
+                  value={filterScore}
+                  onChange={(e) => setFilterScore(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="all">Tous</option>
+                  <option value="not_taken">Non passé</option>
+                  <option value="low">&lt; 50% (Faible)</option>
+                  <option value="medium">50-74% (Moyen)</option>
+                  <option value="high">≥ 75% (Excellent)</option>
+                </select>
+              </div>
+
+              {/* Tri */}
+              <div className="space-y-2">
+                <Label htmlFor="sort">Trier par</Label>
+                <select
+                  id="sort"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="registration_date">Date d'inscription</option>
+                  <option value="name">Nom</option>
+                  <option value="pre_score">Score Pré-Test</option>
+                  <option value="post_score">Score Post-Test</option>
+                  <option value="improvement">Progression</option>
+                </select>
+              </div>
+
+              {/* Ordre de tri */}
+              <div className="space-y-2">
+                <Label htmlFor="order">Ordre</Label>
+                <select
+                  id="order"
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="desc">Décroissant</option>
+                  <option value="asc">Croissant</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Résultats du filtre */}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2 border-t">
+              <span className="font-medium">
+                {stats.filtered} résultat{stats.filtered > 1 ? 's' : ''} sur {stats.total} étudiant{stats.total > 1 ? 's' : ''}
+              </span>
+            </div>
+          </CardContent>
+        )}
+      </Card>
+
       {/* Students Table */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Liste des Étudiants ({students.length})</CardTitle>
+            <CardTitle>
+              Liste des Étudiants ({stats.filtered}{stats.filtered !== stats.total && ` / ${stats.total}`})
+            </CardTitle>
             <Button onClick={handleExportCSV} disabled={isExporting || students.length === 0}>
               {isExporting ? (
                 <>
@@ -168,6 +452,10 @@ export function StudentList() {
           {students.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               Aucun étudiant inscrit pour le moment
+            </div>
+          ) : filteredStudents.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              Aucun résultat ne correspond à vos critères de recherche
             </div>
           ) : (
             <>
@@ -189,7 +477,7 @@ export function StudentList() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {students.map((student) => (
+                    {filteredStudents.map((student) => (
                       <TableRow key={student.id}>
                         <TableCell className="font-medium">
                           {student.full_name}
@@ -280,7 +568,7 @@ export function StudentList() {
 
               {/* Mobile Card View - hidden on desktop */}
               <div className="lg:hidden space-y-4">
-                {students.map((student) => (
+                {filteredStudents.map((student) => (
                   <Card key={student.id} className="border-2">
                     <CardContent className="p-4 space-y-3">
                       <div className="flex items-start justify-between">
