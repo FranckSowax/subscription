@@ -139,13 +139,16 @@ BEGIN
     date::date,
     25,
     0
-  FROM generate_series(
-    '2025-10-15'::date,
-    '2025-11-30'::date,
-    '1 week'::interval
-  ) AS date
-  ON CONFLICT DO NOTHING
-  LIMIT 12;
+  FROM (
+    SELECT date::date
+    FROM generate_series(
+      '2025-10-15'::date,
+      '2025-11-30'::date,
+      '1 week'::interval
+    ) AS date
+    LIMIT 12
+  ) AS limited_dates
+  ON CONFLICT DO NOTHING;
 END $$;
 
 -- ================================================
