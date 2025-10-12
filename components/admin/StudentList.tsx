@@ -393,7 +393,7 @@ export function StudentList() {
                   onChange={(e) => setSortBy(e.target.value)}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
-                  <option value="registration_date">Date d'inscription</option>
+                  <option value="registration_date">Date d&apos;inscription</option>
                   <option value="name">Nom</option>
                   <option value="pre_score">Score Pré-Test</option>
                   <option value="post_score">Score Post-Test</option>
