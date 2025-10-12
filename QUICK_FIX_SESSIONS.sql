@@ -3,6 +3,50 @@
 -- ================================================
 -- Copiez TOUT ce fichier dans Supabase SQL Editor
 
+-- Étape 0 : Corriger les triggers et fonctions
+DO $$
+BEGIN
+  -- Supprimer les anciens triggers
+  DROP TRIGGER IF EXISTS decrement_participants_on_delete ON session_bookings;
+  DROP TRIGGER IF EXISTS increment_participants_on_insert ON session_bookings;
+  
+  -- Supprimer les anciennes fonctions
+  DROP FUNCTION IF EXISTS decrement_session_participants() CASCADE;
+  DROP FUNCTION IF EXISTS increment_session_participants() CASCADE;
+END $$;
+
+-- Créer les nouvelles fonctions (avec 'sessions')
+CREATE OR REPLACE FUNCTION increment_session_participants()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE sessions
+  SET current_participants = current_participants + 1
+  WHERE id = NEW.session_id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION decrement_session_participants()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE sessions
+  SET current_participants = current_participants - 1
+  WHERE id = OLD.session_id;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Créer les nouveaux triggers
+CREATE TRIGGER increment_participants_on_insert
+AFTER INSERT ON session_bookings
+FOR EACH ROW
+EXECUTE FUNCTION increment_session_participants();
+
+CREATE TRIGGER decrement_participants_on_delete
+AFTER DELETE ON session_bookings
+FOR EACH ROW
+EXECUTE FUNCTION decrement_session_participants();
+
 -- Étape 1 : Renommer masterclass_sessions si elle existe
 DO $$
 BEGIN
