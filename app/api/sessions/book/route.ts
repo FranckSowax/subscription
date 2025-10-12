@@ -47,12 +47,16 @@ export async function POST(request: NextRequest) {
 
     // Vérifier si la session existe et n'est pas pleine
     const { data: session, error: sessionError } = await supabase
-      .from('masterclass_sessions')
+      .from('sessions')
       .select('*')
       .eq('id', session_id)
       .single();
 
+    console.log('Session found:', session);
+    console.log('Session error:', sessionError);
+
     if (sessionError || !session) {
+      console.error('Session not found:', sessionError);
       return NextResponse.json(
         { error: 'Session non trouvée' },
         { status: 404 }
@@ -79,10 +83,23 @@ export async function POST(request: NextRequest) {
     if (bookingError) {
       console.error('Booking error:', bookingError);
       return NextResponse.json(
-        { error: 'Erreur lors de la réservation' },
+        { error: 'Erreur lors de la réservation de la session' },
         { status: 500 }
       );
     }
+
+    // Mettre à jour le compteur de participants
+    const { error: updateError } = await supabase
+      .from('sessions')
+      .update({ current_participants: session.current_participants + 1 })
+      .eq('id', session_id);
+
+    if (updateError) {
+      console.error('Update session participants error:', updateError);
+      // Ne pas échouer si la mise à jour échoue, la réservation est déjà créée
+    }
+
+    console.log('Booking created successfully:', booking);
 
     return NextResponse.json({
       success: true,
