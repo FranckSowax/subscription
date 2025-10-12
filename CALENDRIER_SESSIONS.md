@@ -4,7 +4,7 @@
 
 - **Total Sessions :** 12
 - **Total Places :** 300 (25 places par session)
-- **Période :** 20 Octobre - 6 Novembre 2025
+- **Période :** 21 Octobre - 6 Novembre 2025
 - **Horaires :** 9h00 - 15h00
 
 ---
@@ -13,10 +13,10 @@
 
 | Date | Jour | Places | Horaire |
 |------|------|--------|---------|
-| **20 Octobre** | Lundi | 25 | 9h00 - 15h00 |
 | **21 Octobre** | Mardi | 25 | 9h00 - 15h00 |
 | **22 Octobre** | Mercredi | 25 | 9h00 - 15h00 |
 | **23 Octobre** | Jeudi | 25 | 9h00 - 15h00 |
+| **24 Octobre** | Vendredi | 25 | 9h00 - 15h00 |
 | **27 Octobre** | Lundi | 25 | 9h00 - 15h00 |
 | **28 Octobre** | Mardi | 25 | 9h00 - 15h00 |
 | **29 Octobre** | Mercredi | 25 | 9h00 - 15h00 |

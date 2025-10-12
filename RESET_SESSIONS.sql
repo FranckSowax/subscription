@@ -75,7 +75,7 @@ BEGIN
       'Introduction à l''Intelligence Artificielle - 2025',
       'Masterclass complète d''introduction aux concepts fondamentaux de l''IA',
       300,
-      '2025-10-20',
+      '2025-10-21',
       '2025-11-06'
     )
     RETURNING id INTO v_masterclass_id;
@@ -85,10 +85,10 @@ BEGIN
   INSERT INTO sessions (masterclass_id, session_date, max_participants, current_participants)
   VALUES
     -- OCTOBRE 2025 (8 sessions)
-    (v_masterclass_id, '2025-10-20', 25, 0),  -- Lundi
     (v_masterclass_id, '2025-10-21', 25, 0),  -- Mardi
     (v_masterclass_id, '2025-10-22', 25, 0),  -- Mercredi
     (v_masterclass_id, '2025-10-23', 25, 0),  -- Jeudi
+    (v_masterclass_id, '2025-10-24', 25, 0),  -- Vendredi
     (v_masterclass_id, '2025-10-27', 25, 0),  -- Lundi
     (v_masterclass_id, '2025-10-28', 25, 0),  -- Mardi
     (v_masterclass_id, '2025-10-29', 25, 0),  -- Mercredi

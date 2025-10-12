@@ -136,10 +136,10 @@ BEGIN
   INSERT INTO sessions (masterclass_id, session_date, max_participants, current_participants)
   VALUES
     -- Octobre 2025 (8 sessions)
-    (v_masterclass_id, '2025-10-20', 25, 0),
     (v_masterclass_id, '2025-10-21', 25, 0),
     (v_masterclass_id, '2025-10-22', 25, 0),
     (v_masterclass_id, '2025-10-23', 25, 0),
+    (v_masterclass_id, '2025-10-24', 25, 0),
     (v_masterclass_id, '2025-10-27', 25, 0),
     (v_masterclass_id, '2025-10-28', 25, 0),
     (v_masterclass_id, '2025-10-29', 25, 0),
