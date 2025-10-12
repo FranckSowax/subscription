@@ -10,7 +10,7 @@ export async function GET() {
   try {
     // Get all sessions with their bookings
     const { data: sessions, error: sessionsError } = await supabase
-      .from('masterclass_sessions')
+      .from('sessions')
       .select(`
         id,
         session_date,

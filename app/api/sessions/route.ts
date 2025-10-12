@@ -10,7 +10,7 @@ export async function GET() {
   try {
     // Récupérer toutes les sessions avec le nombre de participants
     const { data: sessions, error } = await supabase
-      .from('masterclass_sessions')
+      .from('sessions')
       .select('*')
       .order('session_date', { ascending: true });
 
@@ -23,17 +23,17 @@ export async function GET() {
     }
 
     // Calculer les statistiques globales
-    const totalCapacity = sessions.reduce((sum, s) => sum + s.max_participants, 0);
-    const totalBooked = sessions.reduce((sum, s) => sum + s.current_participants, 0);
+    const totalCapacity = sessions?.reduce((sum, s) => sum + s.max_participants, 0) || 0;
+    const totalBooked = sessions?.reduce((sum, s) => sum + (s.current_participants || 0), 0) || 0;
     const availableSpots = totalCapacity - totalBooked;
 
     return NextResponse.json({
-      sessions,
+      sessions: sessions || [],
       stats: {
         totalCapacity,
         totalBooked,
         availableSpots,
-        totalSessions: sessions.length,
+        totalSessions: sessions?.length || 0,
       },
     });
   } catch (error) {

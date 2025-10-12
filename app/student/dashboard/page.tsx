@@ -195,12 +195,12 @@ export default function StudentDashboardPage() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-muted-foreground">⏰ Horaire :</span>
-                          <span className="font-semibold">14:00 - 17:00</span>
+                          <span className="font-semibold">9h00 - 15h00</span>
                         </div>
                       </div>
                     </div>
                     <div className="p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
-                      📍 Les détails de connexion vous seront communiqués par email avant la session
+                      📍 Les détails de connexion vous seront communiqués par email avant la session.
                     </div>
                   </>
                 ) : (
