@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+interface InscriptionWithEducation {
+  id: string;
+  validated: boolean;
+  registration_date: string;
+  field_of_study?: string | null;
+  education_level?: string | null;
+}
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -68,8 +76,8 @@ export async function GET(request: NextRequest) {
           date_of_birth: profile?.date_of_birth || 'N/A',
           whatsapp_number: profile?.whatsapp_number || 'N/A',
           gender: profile?.gender || 'N/A',
-          field_of_study: (inscription as any).field_of_study || null,
-          education_level: (inscription as any).education_level || null,
+          field_of_study: (inscription as InscriptionWithEducation).field_of_study || null,
+          education_level: (inscription as InscriptionWithEducation).education_level || null,
           masterclass: masterclass?.title || 'N/A',
           validated: inscription.validated,
           registration_date: inscription.registration_date,
