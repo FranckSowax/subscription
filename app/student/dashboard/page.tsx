@@ -144,140 +144,139 @@ export default function StudentDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      {/* Header avec gradient moderne */}
-      <header className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 shadow-xl">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-background">
+      {/* Header simplifié avec couleurs du thème */}
+      <header className="bg-primary shadow-lg">
+        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="text-white">
-              <div className="flex items-center gap-3 mb-1">
-                <div className="bg-white/20 backdrop-blur-sm p-2 rounded-full">
-                  <Award className="h-6 w-6" />
+              <div className="flex items-center gap-2 sm:gap-3 mb-1">
+                <div className="bg-white/20 p-2 rounded-lg">
+                  <Award className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
-                <h1 className="text-3xl font-bold">Espace Étudiant</h1>
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Espace Étudiant</h1>
               </div>
-              <p className="text-blue-100 ml-12 text-lg">Bienvenue, {data.full_name} 👋</p>
+              <p className="text-primary-foreground/90 ml-9 sm:ml-11 text-sm sm:text-base">Bienvenue, {data.full_name}</p>
             </div>
             <Button 
               variant="outline" 
               size="sm" 
               onClick={handleLogout}
-              className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white backdrop-blur-sm"
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white self-end sm:self-auto"
             >
               <LogOut className="h-4 w-4 mr-2" />
-              Déconnexion
+              <span className="hidden sm:inline">Déconnexion</span>
+              <span className="sm:hidden">Quitter</span>
             </Button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Masterclass & Session Info - Carte avec gradient */}
-          <Card className="border-0 shadow-2xl overflow-hidden bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 hover:shadow-3xl transition-all duration-300">
-            <CardHeader className="bg-white/10 backdrop-blur-md border-b border-white/20">
-              <CardTitle className="flex items-center gap-3 text-white text-2xl">
-                <div className="bg-white/20 p-2 rounded-lg">
-                  <Calendar className="h-6 w-6" />
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+          {/* Masterclass & Session Info */}
+          <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl md:text-2xl">
+                <div className="bg-primary/10 p-2 rounded-lg">
+                  <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
-                Ma Masterclass
+                <span>Ma Masterclass</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="bg-white/95 backdrop-blur-sm">
-              <div className="space-y-5 py-4">
-                {/* Masterclass Title */}
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-xl border-2 border-blue-200">
-                  <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">Formation</p>
-                  <p className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    {data.masterclass_title}
-                  </p>
-                  {data.masterclass_description && (
-                    <p className="text-sm text-gray-600 mt-2">{data.masterclass_description}</p>
-                  )}
-                </div>
+            <CardContent className="space-y-4 sm:space-y-5 pt-4 sm:pt-6">
+              {/* Masterclass Title */}
+              <div className="bg-secondary p-4 sm:p-5 rounded-xl border-2 border-primary/10">
+                <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-2">Formation</p>
+                <p className="font-bold text-lg sm:text-xl text-foreground">
+                  {data.masterclass_title}
+                </p>
+                {data.masterclass_description && (
+                  <p className="text-sm text-muted-foreground mt-2">{data.masterclass_description}</p>
+                )}
+              </div>
 
-                {/* Session Date */}
-                {data.session_date ? (
-                  <>
-                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl border-2 border-green-200">
-                      <p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-3">
-                        ✅ Session Réservée
-                      </p>
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
-                          <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-2 rounded-lg">
-                            <Calendar className="h-5 w-5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-xs text-gray-500">Date de la session</p>
-                            <p className="font-bold text-gray-800">{formatDate(data.session_date)}</p>
-                          </div>
+              {/* Session Date */}
+              {data.session_date ? (
+                <>
+                  <div className="bg-primary/5 p-4 sm:p-5 rounded-xl border-2 border-primary/20">
+                    <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-3">
+                      ✅ Session Réservée
+                    </p>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 bg-card p-3 sm:p-4 rounded-lg shadow-sm border border-border">
+                        <div className="bg-primary p-2 rounded-lg flex-shrink-0">
+                          <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                         </div>
-                        <div className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm">
-                          <div className="bg-gradient-to-br from-orange-500 to-pink-500 p-2 rounded-lg">
-                            <Clock className="h-5 w-5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-xs text-gray-500">Horaires</p>
-                            <p className="font-bold text-gray-800">9h00 - 15h00</p>
-                          </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-muted-foreground">Date de la session</p>
+                          <p className="font-bold text-sm sm:text-base text-foreground truncate">{formatDate(data.session_date)}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 bg-card p-3 sm:p-4 rounded-lg shadow-sm border border-border">
+                        <div className="bg-accent p-2 rounded-lg flex-shrink-0">
+                          <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-muted-foreground">Horaires</p>
+                          <p className="font-bold text-sm sm:text-base text-foreground">9h00 - 15h00</p>
                         </div>
                       </div>
                     </div>
-                    <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-xl text-white shadow-lg">
-                      <p className="text-sm flex items-center gap-2">
-                        <span className="text-xl">📍</span>
-                        <span className="font-medium">Les détails de connexion vous seront communiqués par email avant la session.</span>
-                      </p>
-                    </div>
-                  </>
-                ) : (
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-xl border-2 border-orange-200 text-center">
-                    <p className="text-orange-700 font-semibold">⚠️ Aucune session réservée</p>
                   </div>
-                )}
-              </div>
+                  <div className="bg-primary p-4 sm:p-5 rounded-xl text-white shadow-md">
+                    <p className="text-xs sm:text-sm flex items-start gap-2">
+                      <span className="text-lg sm:text-xl flex-shrink-0">📍</span>
+                      <span className="font-medium">Les détails de connexion vous seront communiqués par email avant la session.</span>
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <div className="bg-destructive/10 p-4 sm:p-6 rounded-xl border-2 border-destructive/30 text-center">
+                  <p className="text-destructive font-semibold text-sm sm:text-base">⚠️ Aucune session réservée</p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
-          {/* Test PRE - Design moderne */}
-          <Card className="border-0 shadow-xl overflow-hidden bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 hover:shadow-2xl transition-all duration-300">
-            <CardHeader className="bg-white/10 backdrop-blur-md border-b border-white/20">
-              <CardTitle className="flex items-center gap-3 text-white text-xl">
-                <div className="bg-white/20 p-2 rounded-lg">
-                  <CheckCircle className="h-6 w-6" />
+          {/* Test PRE */}
+          <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl">
+                <div className="bg-primary/10 p-2 rounded-lg">
+                  <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
-                Test Pré-Inscription
+                <span>Test Pré-Inscription</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="bg-white/95 backdrop-blur-sm py-6">
+            <CardContent className="space-y-4 pt-4 sm:pt-6">
               {data.pre_test_id ? (
-                <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-5 rounded-xl border-2 border-green-300">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm font-semibold text-green-700 uppercase tracking-wide">Votre Score</span>
-                      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-5 py-2 rounded-full text-2xl font-bold shadow-lg">
+                <>
+                  <div className="bg-primary/5 p-4 sm:p-5 rounded-xl border-2 border-primary/20">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4">
+                      <span className="text-xs sm:text-sm font-semibold text-primary uppercase tracking-wide">Votre Score</span>
+                      <div className="bg-primary text-white px-4 sm:px-5 py-2 rounded-full text-xl sm:text-2xl font-bold shadow-lg">
                         {data.pre_test_score}/{data.pre_test_max_score}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Clock className="h-4 w-4" />
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                      <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                       <span>Passé le : <strong>{data.pre_test_date ? formatDate(data.pre_test_date) : '-'}</strong></span>
                     </div>
                   </div>
                   <Link href={`/test/results/${data.pre_test_id}`}>
-                    <Button variant="outline" className="w-full h-12 font-semibold bg-gradient-to-r from-green-600 to-emerald-600 text-white border-0 hover:from-green-700 hover:to-emerald-700">
+                    <Button variant="outline" className="w-full h-11 sm:h-12 font-semibold bg-primary text-white border-0 hover:bg-primary/90 text-sm sm:text-base">
                       📊 Voir les résultats détaillés
                     </Button>
                   </Link>
-                </div>
+                </>
               ) : (
                 <div className="text-center space-y-4">
-                  <div className="bg-orange-50 p-6 rounded-xl border-2 border-orange-200">
-                    <p className="text-orange-700 font-semibold">Test non encore passé</p>
+                  <div className="bg-secondary p-4 sm:p-6 rounded-xl border-2 border-border">
+                    <p className="text-foreground font-semibold text-sm sm:text-base">Test non encore passé</p>
                   </div>
-                  <Button className="w-full h-12 font-semibold bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-lg">
+                  <Button className="w-full h-11 sm:h-12 font-semibold bg-primary hover:bg-primary/90 text-sm sm:text-base">
                     🚀 Passer le test maintenant
                   </Button>
                 </div>
@@ -285,67 +284,67 @@ export default function StudentDashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Test POST - Design moderne */}
-          <Card className="border-0 shadow-xl overflow-hidden bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 hover:shadow-2xl transition-all duration-300">
-            <CardHeader className="bg-white/10 backdrop-blur-md border-b border-white/20">
-              <CardTitle className="flex items-center gap-3 text-white text-xl">
-                <div className="bg-white/20 p-2 rounded-lg">
-                  <Award className="h-6 w-6" />
+          {/* Test POST */}
+          <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="bg-accent/5">
+              <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl">
+                <div className="bg-accent/10 p-2 rounded-lg">
+                  <Award className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />
                 </div>
-                Test Post-Masterclass
+                <span>Test Post-Masterclass</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="bg-white/95 backdrop-blur-sm py-6">
+            <CardContent className="space-y-4 pt-4 sm:pt-6">
               {data.post_test_id ? (
-                <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 p-5 rounded-xl border-2 border-amber-300">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm font-semibold text-amber-700 uppercase tracking-wide">Votre Score Final</span>
-                      <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-5 py-2 rounded-full text-2xl font-bold shadow-lg">
+                <>
+                  <div className="bg-accent/5 p-4 sm:p-5 rounded-xl border-2 border-accent/20">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4">
+                      <span className="text-xs sm:text-sm font-semibold text-accent uppercase tracking-wide">Votre Score Final</span>
+                      <div className="bg-accent text-white px-4 sm:px-5 py-2 rounded-full text-xl sm:text-2xl font-bold shadow-lg">
                         {data.post_test_score}/{data.post_test_max_score}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Clock className="h-4 w-4" />
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                      <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                       <span>Passé le : <strong>{data.post_test_date ? formatDate(data.post_test_date) : '-'}</strong></span>
                     </div>
                   </div>
                   <Link href={`/test/results/${data.post_test_id}`}>
-                    <Button variant="outline" className="w-full h-12 font-semibold bg-gradient-to-r from-amber-600 to-orange-600 text-white border-0 hover:from-amber-700 hover:to-orange-700">
+                    <Button variant="outline" className="w-full h-11 sm:h-12 font-semibold bg-accent text-white border-0 hover:bg-accent/90 text-sm sm:text-base">
                       🏆 Voir les résultats détaillés
                     </Button>
                   </Link>
-                </div>
+                </>
               ) : data.post_test_available ? (
                 <div className="text-center space-y-4">
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border-2 border-green-300 shadow-lg">
-                    <div className="text-6xl mb-3">✅</div>
-                    <p className="text-green-800 font-bold text-lg mb-2">Test disponible !</p>
-                    <p className="text-sm text-green-700">
+                  <div className="bg-primary/5 p-4 sm:p-6 rounded-xl border-2 border-primary/20 shadow-md">
+                    <div className="text-4xl sm:text-5xl md:text-6xl mb-3">✅</div>
+                    <p className="text-primary font-bold text-base sm:text-lg mb-2">Test disponible !</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       Votre masterclass a eu lieu. Vous pouvez maintenant passer le test final.
                     </p>
                   </div>
                   <Link href="/test/post">
-                    <Button className="w-full h-12 font-semibold bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-lg">
+                    <Button className="w-full h-11 sm:h-12 font-semibold bg-primary hover:bg-primary/90 text-sm sm:text-base">
                       🎯 Passer le test post-masterclass
                     </Button>
                   </Link>
                 </div>
               ) : (
                 <div className="text-center space-y-4">
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-xl border-2 border-orange-300 shadow-lg">
-                    <div className="bg-gradient-to-br from-orange-500 to-red-500 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4 shadow-xl">
-                      <Clock className="h-10 w-10 text-white" />
+                  <div className="bg-secondary p-4 sm:p-6 rounded-xl border-2 border-border shadow-md">
+                    <div className="bg-accent w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full flex items-center justify-center mb-4 shadow-lg">
+                      <Clock className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                     </div>
-                    <p className="font-bold text-xl text-orange-900 mb-2">⏳ Test verrouillé</p>
-                    <p className="text-sm text-orange-800 mb-3">
+                    <p className="font-bold text-base sm:text-xl text-foreground mb-2">⏳ Test verrouillé</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-3">
                       Ce test sera disponible après votre masterclass
                       {data.session_date && ` le ${formatDate(data.session_date)} à 15h00`}
                     </p>
                     {countdown && (
-                      <div className="mt-4 bg-white p-4 rounded-xl border-2 border-orange-400 shadow-lg">
-                        <p className="text-xs text-orange-700 font-semibold mb-2 uppercase tracking-wide">Disponible dans :</p>
-                        <p className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent font-mono tracking-wide">
+                      <div className="mt-4 bg-card p-3 sm:p-4 rounded-xl border-2 border-primary/30 shadow-md">
+                        <p className="text-xs font-semibold text-primary mb-2 uppercase tracking-wide">Disponible dans :</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-accent font-mono tracking-wide">
                           {countdown}
                         </p>
                       </div>
@@ -356,27 +355,25 @@ export default function StudentDashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Info - Carte d'information moderne */}
-          <Card className="border-0 shadow-xl overflow-hidden bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-500">
-            <CardContent className="bg-white/90 backdrop-blur-sm py-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border-2 border-blue-200">
-                  <div className="bg-gradient-to-br from-blue-500 to-indigo-500 p-2 rounded-lg">
-                    <span className="text-2xl">📧</span>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide">Email</p>
-                    <p className="font-bold text-gray-800">{data.email}</p>
-                  </div>
+          {/* Info personnelles */}
+          <Card className="shadow-lg">
+            <CardContent className="space-y-3 pt-6">
+              <div className="flex items-center gap-3 bg-background p-3 sm:p-4 rounded-xl border border-border">
+                <div className="bg-primary p-2 rounded-lg flex-shrink-0">
+                  <span className="text-xl sm:text-2xl">📧</span>
                 </div>
-                <div className="flex items-center gap-3 bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl border-2 border-purple-200">
-                  <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-2 rounded-lg">
-                    <span className="text-2xl">📅</span>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide">Inscrit le</p>
-                    <p className="font-bold text-gray-800">{formatDate(data.inscription_date)}</p>
-                  </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email</p>
+                  <p className="font-bold text-sm sm:text-base text-foreground truncate">{data.email}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 bg-background p-3 sm:p-4 rounded-xl border border-border">
+                <div className="bg-accent p-2 rounded-lg flex-shrink-0">
+                  <span className="text-xl sm:text-2xl">📅</span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Inscrit le</p>
+                  <p className="font-bold text-sm sm:text-base text-foreground">{formatDate(data.inscription_date)}</p>
                 </div>
               </div>
             </CardContent>
