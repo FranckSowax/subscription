@@ -225,12 +225,6 @@ export default function StudentDashboardPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-primary p-4 sm:p-5 rounded-xl text-white shadow-md">
-                    <p className="text-xs sm:text-sm flex items-start gap-2">
-                      <span className="text-lg sm:text-xl flex-shrink-0">📍</span>
-                      <span className="font-medium">Les détails de connexion vous seront communiqués par email avant la session.</span>
-                    </p>
-                  </div>
                 </>
               ) : (
                 <div className="bg-destructive/10 p-4 sm:p-6 rounded-xl border-2 border-destructive/30 text-center">
