@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { full_name, email, whatsapp_number, gender } = validationResult.data;
+    const { full_name, email, whatsapp_number, gender, field_of_study, education_level } = validationResult.data;
 
     // Check if email already exists
     const { data: existingUser } = await supabase.auth.admin.listUsers();
@@ -112,6 +112,8 @@ export async function POST(request: NextRequest) {
       .insert({
         profile_id: authData.user.id,
         masterclass_id: masterclass!.id,
+        field_of_study,
+        education_level,
         validated: false, // Will be validated after pre-test
       })
       .select()

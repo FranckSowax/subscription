@@ -133,6 +133,49 @@ export function RegistrationForm() {
             )}
           </div>
 
+          {/* Field of Study */}
+          <div className="space-y-2">
+            <Label htmlFor="field_of_study">
+              Filière d&apos;étude <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="field_of_study"
+              type="text"
+              placeholder="Ex: Informatique, Mathématiques, Économie..."
+              {...register('field_of_study')}
+              disabled={isLoading}
+            />
+            {errors.field_of_study && (
+              <p className="text-sm text-destructive">{errors.field_of_study.message}</p>
+            )}
+          </div>
+
+          {/* Education Level */}
+          <div className="space-y-2">
+            <Label htmlFor="education_level">
+              Niveau d&apos;étude <span className="text-destructive">*</span>
+            </Label>
+            <select
+              id="education_level"
+              {...register('education_level')}
+              disabled={isLoading}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="">Sélectionnez votre niveau</option>
+              <option value="Bac">Bac</option>
+              <option value="Bac+1">Bac+1</option>
+              <option value="Bac+2">Bac+2 (DUT, BTS, L2)</option>
+              <option value="Bac+3">Bac+3 (Licence)</option>
+              <option value="Bac+4">Bac+4 (Master 1)</option>
+              <option value="Bac+5">Bac+5 (Master 2, Ingénieur)</option>
+              <option value="Bac+8">Bac+8 (Doctorat)</option>
+              <option value="Autre">Autre</option>
+            </select>
+            {errors.education_level && (
+              <p className="text-sm text-destructive">{errors.education_level.message}</p>
+            )}
+          </div>
+
           {/* Consent Checkbox */}
           <div className="flex items-start space-x-2">
             <input

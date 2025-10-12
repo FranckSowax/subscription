@@ -21,6 +21,8 @@ interface Student {
   date_of_birth: string;
   whatsapp_number: string;
   gender: string;
+  field_of_study: string | null;
+  education_level: string | null;
   masterclass: string;
   validated: boolean;
   registration_date: string;
@@ -178,6 +180,8 @@ export function StudentList() {
                       <TableHead>Email</TableHead>
                       <TableHead>Téléphone</TableHead>
                       <TableHead>Genre</TableHead>
+                      <TableHead>Filière</TableHead>
+                      <TableHead>Niveau</TableHead>
                       <TableHead>Statut</TableHead>
                       <TableHead>Pré-Test</TableHead>
                       <TableHead>Post-Test</TableHead>
@@ -200,6 +204,12 @@ export function StudentList() {
                           <Badge variant={student.gender === 'Homme' ? 'default' : 'secondary'}>
                             {student.gender}
                           </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {student.field_of_study || <span className="text-muted-foreground">N/A</span>}
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {student.education_level || <span className="text-muted-foreground">N/A</span>}
                         </TableCell>
                         <TableCell>
                           {student.validated ? (

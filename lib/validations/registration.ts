@@ -21,6 +21,15 @@ export const registrationSchema = z.object({
   
   gender: z.enum(['Homme', 'Femme']),
   
+  field_of_study: z
+    .string()
+    .min(1, 'La filière d\'étude est requise')
+    .max(100, 'La filière ne peut pas dépasser 100 caractères'),
+  
+  education_level: z
+    .string()
+    .min(1, 'Le niveau d\'étude est requis'),
+  
   consent: z
     .boolean()
     .refine((val) => val === true, {

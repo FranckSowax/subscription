@@ -16,6 +16,8 @@ interface SessionWithParticipants {
     full_name: string;
     email: string;
     whatsapp_number: string;
+    field_of_study: string | null;
+    education_level: string | null;
     registration_date: string;
     pre_test_score: number | null;
     validated: boolean;
@@ -56,11 +58,13 @@ export default function AdminSessionsPage() {
   };
 
   const exportSessionCSV = (session: SessionWithParticipants) => {
-    const headers = ['Nom', 'Email', 'Téléphone', 'Date inscription', 'Score PRE', 'Validé'];
+    const headers = ['Nom', 'Email', 'Téléphone', 'Filière', 'Niveau', 'Date inscription', 'Score PRE', 'Validé'];
     const rows = session.participants.map(p => [
       p.full_name,
       p.email,
       p.whatsapp_number,
+      p.field_of_study || 'N/A',
+      p.education_level || 'N/A',
       new Date(p.registration_date).toLocaleDateString('fr-FR'),
       p.pre_test_score?.toString() || 'N/A',
       p.validated ? 'Oui' : 'Non'
@@ -88,6 +92,8 @@ export default function AdminSessionsPage() {
         <td style="padding: 12px 8px;">${p.full_name}</td>
         <td style="padding: 12px 8px; font-size: 0.875rem;">${p.email}</td>
         <td style="padding: 12px 8px;">${p.whatsapp_number}</td>
+        <td style="padding: 12px 8px; font-size: 0.8rem;">${p.field_of_study || 'N/A'}</td>
+        <td style="padding: 12px 8px; text-align: center; font-size: 0.8rem;">${p.education_level || 'N/A'}</td>
         <td style="padding: 12px 8px; text-align: center;">${new Date(p.registration_date).toLocaleDateString('fr-FR')}</td>
         <td style="padding: 12px 8px; text-align: center; font-weight: 600; color: #FF6B57;">${p.pre_test_score !== null ? `${p.pre_test_score}/10` : 'N/A'}</td>
         <td style="padding: 12px 8px; text-align: center;">
@@ -230,13 +236,15 @@ export default function AdminSessionsPage() {
           <table>
             <thead>
               <tr>
-                <th style="text-align: center; width: 50px;">#</th>
-                <th style="width: 180px;">Nom Complet</th>
-                <th style="width: 220px;">Email</th>
-                <th style="width: 130px;">Téléphone</th>
-                <th style="text-align: center; width: 120px;">Inscription</th>
-                <th style="text-align: center; width: 100px;">Score PRE</th>
-                <th style="text-align: center; width: 110px;">Statut</th>
+                <th style="text-align: center; width: 40px;">#</th>
+                <th style="width: 150px;">Nom Complet</th>
+                <th style="width: 180px;">Email</th>
+                <th style="width: 110px;">Téléphone</th>
+                <th style="width: 130px;">Filière</th>
+                <th style="text-align: center; width: 90px;">Niveau</th>
+                <th style="text-align: center; width: 100px;">Inscription</th>
+                <th style="text-align: center; width: 85px;">Score PRE</th>
+                <th style="text-align: center; width: 90px;">Statut</th>
               </tr>
             </thead>
             <tbody>
@@ -381,18 +389,26 @@ export default function AdminSessionsPage() {
                         key={index}
                         className="p-4 rounded-lg border bg-gradient-to-r from-white to-gray-50 hover:shadow-md transition-shadow"
                       >
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                           <div>
                             <p className="text-sm text-muted-foreground">Nom</p>
                             <p className="font-semibold">{participant.full_name}</p>
                           </div>
                           <div>
                             <p className="text-sm text-muted-foreground">Email</p>
-                            <p className="font-medium">{participant.email}</p>
+                            <p className="font-medium text-sm">{participant.email}</p>
                           </div>
                           <div>
                             <p className="text-sm text-muted-foreground">Téléphone</p>
                             <p className="font-medium">{participant.whatsapp_number}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Filière</p>
+                            <p className="font-medium">{participant.field_of_study || 'Non renseigné'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Niveau</p>
+                            <p className="font-medium">{participant.education_level || 'Non renseigné'}</p>
                           </div>
                           <div>
                             <p className="text-sm text-muted-foreground">Inscription</p>

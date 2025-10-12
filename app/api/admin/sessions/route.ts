@@ -38,6 +38,8 @@ export async function GET() {
               id,
               profile_id,
               registration_date,
+              field_of_study,
+              education_level,
               validated,
               profiles (
                 full_name,
@@ -71,6 +73,8 @@ export async function GET() {
               full_name: inscription.profiles?.full_name || 'N/A',
               email: authUser?.user?.email || 'N/A',
               whatsapp_number: inscription.profiles?.whatsapp_number || 'N/A',
+              field_of_study: inscription.field_of_study,
+              education_level: inscription.education_level,
               registration_date: inscription.registration_date,
               pre_test_score: preTest?.score || null,
               validated: inscription.validated,

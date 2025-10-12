@@ -18,6 +18,8 @@ export async function GET(request: NextRequest) {
         id,
         validated,
         registration_date,
+        field_of_study,
+        education_level,
         profiles (
           id,
           full_name,
@@ -66,6 +68,8 @@ export async function GET(request: NextRequest) {
           date_of_birth: profile?.date_of_birth || 'N/A',
           whatsapp_number: profile?.whatsapp_number || 'N/A',
           gender: profile?.gender || 'N/A',
+          field_of_study: (inscription as any).field_of_study || null,
+          education_level: (inscription as any).education_level || null,
           masterclass: masterclass?.title || 'N/A',
           validated: inscription.validated,
           registration_date: inscription.registration_date,
@@ -108,6 +112,8 @@ interface StudentCSV {
   full_name: string;
   date_of_birth: string;
   whatsapp_number: string;
+  field_of_study: string | null;
+  education_level: string | null;
   masterclass: string;
   validated: boolean;
   registration_date: string;
@@ -125,6 +131,8 @@ function generateCSV(students: StudentCSV[]): string {
     'Nom Complet',
     'Date de Naissance',
     'WhatsApp',
+    'Filière',
+    'Niveau',
     'Masterclass',
     'Validé',
     'Date Inscription',
@@ -141,6 +149,8 @@ function generateCSV(students: StudentCSV[]): string {
     student.full_name,
     student.date_of_birth,
     student.whatsapp_number,
+    student.field_of_study || 'N/A',
+    student.education_level || 'N/A',
     student.masterclass,
     student.validated ? 'Oui' : 'Non',
     new Date(student.registration_date).toLocaleDateString('fr-FR'),
