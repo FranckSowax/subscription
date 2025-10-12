@@ -93,27 +93,25 @@ BEGIN
   -- Compter les sessions existantes
   SELECT COUNT(*) INTO v_session_count FROM sessions WHERE masterclass_id = v_masterclass_id;
   
-  -- Créer des sessions seulement s'il en manque
+  -- Créer les 12 sessions avec les dates exactes
   IF v_session_count < 12 THEN
     INSERT INTO sessions (masterclass_id, session_date, max_participants, current_participants)
-    SELECT 
-      v_masterclass_id,
-      session_date,
-      25,
-      0
-    FROM (
-      SELECT date::date AS session_date
-      FROM generate_series(
-        '2025-10-15'::date,
-        '2025-12-31'::date,
-        '1 week'::interval
-      ) AS date
-      ORDER BY date
-      LIMIT 12
-    ) AS dates
-    WHERE session_date NOT IN (
-      SELECT session_date FROM sessions WHERE masterclass_id = v_masterclass_id
-    );
+    VALUES
+      -- Octobre 2025 (8 sessions)
+      (v_masterclass_id, '2025-10-20', 25, 0),
+      (v_masterclass_id, '2025-10-21', 25, 0),
+      (v_masterclass_id, '2025-10-22', 25, 0),
+      (v_masterclass_id, '2025-10-23', 25, 0),
+      (v_masterclass_id, '2025-10-27', 25, 0),
+      (v_masterclass_id, '2025-10-28', 25, 0),
+      (v_masterclass_id, '2025-10-29', 25, 0),
+      (v_masterclass_id, '2025-10-30', 25, 0),
+      -- Novembre 2025 (4 sessions)
+      (v_masterclass_id, '2025-11-03', 25, 0),
+      (v_masterclass_id, '2025-11-04', 25, 0),
+      (v_masterclass_id, '2025-11-05', 25, 0),
+      (v_masterclass_id, '2025-11-06', 25, 0)
+    ON CONFLICT DO NOTHING;
   END IF;
 END $$;
 

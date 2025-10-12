@@ -132,22 +132,23 @@ BEGIN
     RETURNING id INTO v_masterclass_id;
   END IF;
   
-  -- Create 12 sessions (weekly, starting from Oct 15, 2025)
+  -- Create 12 sessions with exact dates (Octobre + Novembre 2025)
   INSERT INTO sessions (masterclass_id, session_date, max_participants, current_participants)
-  SELECT 
-    v_masterclass_id,
-    date::date,
-    25,
-    0
-  FROM (
-    SELECT date::date
-    FROM generate_series(
-      '2025-10-15'::date,
-      '2025-11-30'::date,
-      '1 week'::interval
-    ) AS date
-    LIMIT 12
-  ) AS limited_dates
+  VALUES
+    -- Octobre 2025 (8 sessions)
+    (v_masterclass_id, '2025-10-20', 25, 0),
+    (v_masterclass_id, '2025-10-21', 25, 0),
+    (v_masterclass_id, '2025-10-22', 25, 0),
+    (v_masterclass_id, '2025-10-23', 25, 0),
+    (v_masterclass_id, '2025-10-27', 25, 0),
+    (v_masterclass_id, '2025-10-28', 25, 0),
+    (v_masterclass_id, '2025-10-29', 25, 0),
+    (v_masterclass_id, '2025-10-30', 25, 0),
+    -- Novembre 2025 (4 sessions)
+    (v_masterclass_id, '2025-11-03', 25, 0),
+    (v_masterclass_id, '2025-11-04', 25, 0),
+    (v_masterclass_id, '2025-11-05', 25, 0),
+    (v_masterclass_id, '2025-11-06', 25, 0)
   ON CONFLICT DO NOTHING;
 END $$;
 
