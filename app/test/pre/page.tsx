@@ -108,11 +108,17 @@ function PreTestContent() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
-        <div className="mb-8 text-center space-y-2">
+        <div className="mb-8 text-center space-y-3">
           <h2 className="text-3xl font-bold">Évaluez vos connaissances</h2>
           <p className="text-muted-foreground">
             Répondez aux 10 questions suivantes. Score minimum requis : 50%
           </p>
+          <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-4 max-w-2xl mx-auto">
+            <p className="text-sm font-semibold text-primary flex items-center justify-center gap-2">
+              <span className="text-xl">⏱️</span>
+              <span>Attention : Vous avez 30 secondes par question !</span>
+            </p>
+          </div>
         </div>
 
         <QCMTest 

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, Clock, Timer } from 'lucide-react';
 
 interface Question {
   id: string;
@@ -25,12 +25,57 @@ interface QCMTestProps {
   inscriptionId: string;
 }
 
+const TIMER_DURATION = 30; // 30 secondes par question
+
 export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
   const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Timer effect
+  useEffect(() => {
+    // Reset timer when question changes
+    setTimeLeft(TIMER_DURATION);
+    
+    // Clear previous timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    // Don't start timer if submitting
+    if (isSubmitting) return;
+
+    // Start new timer
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          // Time's up! Move to next question automatically
+          if (currentQuestion < questions.length - 1) {
+            setCurrentQuestion(currentQuestion + 1);
+          } else {
+            // Last question - auto submit if all answered
+            const allAnswered = questions.every((q) => answers[q.id]);
+            if (allAnswered) {
+              handleSubmit();
+            }
+          }
+          return TIMER_DURATION;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // Cleanup on unmount
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [currentQuestion, isSubmitting]);
 
   const handleAnswerSelect = (questionId: string, choice: string) => {
     setAnswers({ ...answers, [questionId]: choice });
@@ -39,12 +84,14 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
   const handleNext = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
+      setTimeLeft(TIMER_DURATION);
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion(currentQuestion - 1);
+      setTimeLeft(TIMER_DURATION);
     }
   };
 
@@ -95,6 +142,8 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
   const question = questions[currentQuestion];
   const progress = ((currentQuestion + 1) / questions.length) * 100;
   const answeredCount = Object.keys(answers).length;
+  const timerProgress = (timeLeft / TIMER_DURATION) * 100;
+  const isTimerLow = timeLeft <= 10;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -115,6 +164,76 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
           />
         </div>
       </div>
+
+      {/* Timer Display */}
+      <Card className={`border-2 transition-all duration-300 ${
+        isTimerLow 
+          ? 'border-destructive bg-destructive/5 shadow-lg shadow-destructive/20 animate-pulse' 
+          : 'border-primary/30 bg-primary/5'
+      }`}>
+        <CardContent className="py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`relative flex items-center justify-center w-16 h-16 rounded-full ${
+                isTimerLow ? 'bg-destructive/10' : 'bg-primary/10'
+              }`}>
+                {/* Circular progress */}
+                <svg className="absolute w-16 h-16 -rotate-90">
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="28"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                    className={isTimerLow ? 'text-destructive/20' : 'text-primary/20'}
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="28"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                    strokeDasharray={`${2 * Math.PI * 28}`}
+                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - timerProgress / 100)}`}
+                    className={`transition-all duration-1000 ${
+                      isTimerLow ? 'text-destructive' : 'text-primary'
+                    }`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="relative flex flex-col items-center">
+                  <Timer className={`h-5 w-5 ${isTimerLow ? 'text-destructive' : 'text-primary'}`} />
+                  <span className={`text-lg font-bold ${
+                    isTimerLow ? 'text-destructive' : 'text-primary'
+                  }`}>
+                    {timeLeft}s
+                  </span>
+                </div>
+              </div>
+              <div>
+                <p className={`font-semibold text-sm ${
+                  isTimerLow ? 'text-destructive' : 'text-foreground'
+                }`}>
+                  {isTimerLow ? '⚠️ Temps presque écoulé !' : '⏱️ Temps restant'}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {isTimerLow 
+                    ? 'Dépêchez-vous de répondre !' 
+                    : 'Vous avez 30 secondes par question'
+                  }
+                </p>
+              </div>
+            </div>
+            {isTimerLow && (
+              <Badge variant="destructive" className="animate-bounce">
+                {timeLeft}s
+              </Badge>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Question Card */}
       <Card className="border-2 shadow-lg bg-gradient-to-br from-white via-primary/5 to-accent/5">
@@ -178,9 +297,11 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
           Précédent
         </Button>
 
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className={`flex items-center gap-2 text-sm font-medium ${
+          isTimerLow ? 'text-destructive' : 'text-primary'
+        }`}>
           <Clock className="h-4 w-4" />
-          <span>Prenez votre temps</span>
+          <span>{timeLeft}s restantes</span>
         </div>
 
         {currentQuestion < questions.length - 1 ? (
@@ -208,9 +329,13 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
 
       {/* Info */}
       <Alert>
-        <AlertDescription className="text-sm">
-          💡 <strong>Important :</strong> Vous ne pouvez passer ce test qu&apos;une seule fois.
-          Assurez-vous de vos réponses avant de soumettre.
+        <AlertDescription className="text-sm space-y-1">
+          <p>
+            ⏱️ <strong>Timer :</strong> Vous avez 30 secondes par question. Passé ce délai, la question suivante s&apos;affichera automatiquement.
+          </p>
+          <p>
+            💡 <strong>Important :</strong> Vous ne pouvez passer ce test qu&apos;une seule fois. Assurez-vous de vos réponses.
+          </p>
         </AlertDescription>
       </Alert>
     </div>
