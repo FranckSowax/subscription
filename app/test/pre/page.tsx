@@ -116,7 +116,7 @@ function PreTestContent() {
           <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-4 max-w-2xl mx-auto">
             <p className="text-sm font-semibold text-primary flex items-center justify-center gap-2">
               <span className="text-xl">⏱️</span>
-              <span>Attention : Vous avez 30 secondes par question !</span>
+              <span>Attention : Vous avez 15 secondes par question !</span>
             </p>
           </div>
         </div>

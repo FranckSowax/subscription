@@ -60,7 +60,7 @@ export default function SessionSelectionPage({ params }: { params: Promise<{ id:
           {/* Info */}
           <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-6 text-center">
             <p className="text-sm text-blue-900">
-              💡 <strong>À savoir :</strong> Après avoir choisi votre date, vous passerez un test d&apos;évaluation de 10 questions (30 secondes par question). Ce test nous permet d&apos;adapter le contenu de la masterclass à votre niveau. Votre inscription sera validée automatiquement.
+              💡 <strong>À savoir :</strong> Après avoir choisi votre date, vous passerez un test d&apos;évaluation de 10 questions (15 secondes par question). Ce test nous permet d&apos;adapter le contenu de la masterclass à votre niveau. Votre inscription sera validée automatiquement.
             </p>
           </div>
         </div>
