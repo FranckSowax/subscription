@@ -25,7 +25,7 @@ interface QCMTestProps {
   inscriptionId: string;
 }
 
-const TIMER_DURATION = 30; // 30 secondes par question
+const TIMER_DURATION = 15; // 15 secondes par question
 
 export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
   const router = useRouter();
@@ -221,7 +221,7 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
                 <p className="text-xs text-muted-foreground">
                   {isTimerLow 
                     ? 'Dépêchez-vous de répondre !' 
-                    : 'Vous avez 30 secondes par question'
+                    : 'Vous avez 15 secondes par question'
                   }
                 </p>
               </div>
@@ -331,7 +331,7 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
       <Alert>
         <AlertDescription className="text-sm space-y-1">
           <p>
-            ⏱️ <strong>Timer :</strong> Vous avez 30 secondes par question. Passé ce délai, la question suivante s&apos;affichera automatiquement.
+            ⏱️ <strong>Timer :</strong> Vous avez 15 secondes par question. Passé ce délai, la question suivante s&apos;affichera automatiquement.
           </p>
           <p>
             💡 <strong>Important :</strong> Vous ne pouvez passer ce test qu&apos;une seule fois. Assurez-vous de vos réponses.
