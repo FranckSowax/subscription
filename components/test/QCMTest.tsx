@@ -19,6 +19,10 @@ interface Question {
   };
 }
 
+interface ShuffledQuestion extends Question {
+  choiceMapping: Record<string, string>; // nouvelle lettre -> ancienne lettre
+}
+
 interface QCMTestProps {
   questions: Question[];
   testType: 'PRE' | 'POST';
@@ -26,6 +30,44 @@ interface QCMTestProps {
 }
 
 const TIMER_DURATION = 15; // 15 secondes par question
+
+// Fonction pour mélanger les choix d'une question
+function shuffleQuestionChoices(question: Question): ShuffledQuestion {
+  const choices = question.choices;
+  
+  // Créer un tableau des choix avec leurs lettres originales
+  const choicesArray = [
+    { originalLetter: 'A', text: choices.A },
+    { originalLetter: 'B', text: choices.B },
+    { originalLetter: 'C', text: choices.C },
+    { originalLetter: 'D', text: choices.D },
+  ];
+  
+  // Mélanger l'ordre (Fisher-Yates shuffle)
+  for (let i = choicesArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [choicesArray[i], choicesArray[j]] = [choicesArray[j], choicesArray[i]];
+  }
+  
+  // Reconstruire les choix et créer le mapping
+  const shuffledChoices: { A: string; B: string; C: string; D: string } = {
+    A: '', B: '', C: '', D: ''
+  };
+  const choiceMapping: Record<string, string> = {};
+  const letters = ['A', 'B', 'C', 'D'];
+  
+  choicesArray.forEach((choice, index) => {
+    const newLetter = letters[index];
+    shuffledChoices[newLetter as keyof typeof shuffledChoices] = choice.text;
+    choiceMapping[newLetter] = choice.originalLetter;
+  });
+  
+  return {
+    ...question,
+    choices: shuffledChoices,
+    choiceMapping,
+  };
+}
 
 export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
   const router = useRouter();
@@ -35,6 +77,11 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
   const [error, setError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Mélanger les questions une seule fois au chargement
+  const [shuffledQuestions] = useState<ShuffledQuestion[]>(() => 
+    questions.map(q => shuffleQuestionChoices(q))
+  );
 
   // Timer effect
   useEffect(() => {
@@ -54,11 +101,11 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           // Time's up! Move to next question automatically
-          if (currentQuestion < questions.length - 1) {
+          if (currentQuestion < shuffledQuestions.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
           } else {
             // Last question - auto submit if all answered
-            const allAnswered = questions.every((q) => answers[q.id]);
+            const allAnswered = shuffledQuestions.every((q) => answers[q.id]);
             if (allAnswered) {
               handleSubmit();
             }
@@ -83,7 +130,7 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
   };
 
   const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
+    if (currentQuestion < shuffledQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setTimeLeft(TIMER_DURATION);
     }
@@ -98,7 +145,7 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
 
   const handleSubmit = async () => {
     // Check if all questions are answered
-    const unanswered = questions.filter((q) => !answers[q.id]);
+    const unanswered = shuffledQuestions.filter((q) => !answers[q.id]);
     if (unanswered.length > 0) {
       setError(`Veuillez répondre à toutes les questions (${unanswered.length} restantes)`);
       return;
@@ -108,6 +155,17 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
     setError(null);
 
     try {
+      // Convertir les réponses mélangées en réponses originales
+      const originalAnswers: Record<string, string> = {};
+      Object.keys(answers).forEach((questionId) => {
+        const shuffledQuestion = shuffledQuestions.find(q => q.id === questionId);
+        if (shuffledQuestion) {
+          const shuffledChoice = answers[questionId]; // ex: "C"
+          const originalChoice = shuffledQuestion.choiceMapping[shuffledChoice]; // ex: "B"
+          originalAnswers[questionId] = originalChoice;
+        }
+      });
+
       const response = await fetch('/api/tests/submit', {
         method: 'POST',
         headers: {
@@ -116,7 +174,7 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
         body: JSON.stringify({
           inscription_id: inscriptionId,
           test_type: testType,
-          answers,
+          answers: originalAnswers,
         }),
       });
 
@@ -140,8 +198,8 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
     }
   };
 
-  const question = questions[currentQuestion];
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  const question = shuffledQuestions[currentQuestion];
+  const progress = ((currentQuestion + 1) / shuffledQuestions.length) * 100;
   const answeredCount = Object.keys(answers).length;
   const timerProgress = (timeLeft / TIMER_DURATION) * 100;
   const isTimerLow = timeLeft <= 10;
@@ -152,10 +210,10 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">
-            Question {currentQuestion + 1} sur {questions.length}
+            Question {currentQuestion + 1} sur {shuffledQuestions.length}
           </span>
           <span className="text-muted-foreground">
-            {answeredCount}/{questions.length} réponses
+            {answeredCount}/{shuffledQuestions.length} réponses
           </span>
         </div>
         <div className="w-full bg-secondary rounded-full h-3 overflow-hidden">
@@ -305,14 +363,14 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
           <span>{timeLeft}s restantes</span>
         </div>
 
-        {currentQuestion < questions.length - 1 ? (
+        {currentQuestion < shuffledQuestions.length - 1 ? (
           <Button onClick={handleNext} disabled={isSubmitting}>
             Suivant
           </Button>
         ) : (
           <Button
             onClick={handleSubmit}
-            disabled={isSubmitting || answeredCount < questions.length}
+            disabled={isSubmitting || answeredCount < shuffledQuestions.length}
             size="lg"
             className="min-w-[150px]"
           >

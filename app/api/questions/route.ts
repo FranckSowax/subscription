@@ -93,10 +93,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Mélanger les choix pour chaque question
-    const shuffledQuestions = questions?.map(q => shuffleChoices(q)) || [];
-
-    return NextResponse.json({ questions: shuffledQuestions });
+    // Ne plus mélanger côté serveur - le client le fera
+    // pour garder la cohérence avec la validation
+    return NextResponse.json({ questions: questions || [] });
   } catch (error) {
     console.error('Get questions error:', error);
     return NextResponse.json(
