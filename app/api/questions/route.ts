@@ -6,6 +6,45 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// Fonction pour mélanger les choix d'une question
+function shuffleChoices(question: any) {
+  const choices = question.choices;
+  const correctChoice = question.correct_choice;
+  
+  // Créer un tableau des choix avec leurs lettres
+  const choicesArray = [
+    { letter: 'A', text: choices.A },
+    { letter: 'B', text: choices.B },
+    { letter: 'C', text: choices.C },
+    { letter: 'D', text: choices.D },
+  ];
+  
+  // Mélanger l'ordre des choix (Fisher-Yates shuffle)
+  for (let i = choicesArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [choicesArray[i], choicesArray[j]] = [choicesArray[j], choicesArray[i]];
+  }
+  
+  // Reconstruire les choix dans le nouvel ordre
+  const shuffledChoices: any = {};
+  let newCorrectChoice = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  
+  choicesArray.forEach((choice, index) => {
+    shuffledChoices[letters[index]] = choice.text;
+    // Trouver où est passée la bonne réponse
+    if (choice.letter === correctChoice) {
+      newCorrectChoice = letters[index];
+    }
+  });
+  
+  return {
+    ...question,
+    choices: shuffledChoices,
+    correct_choice: newCorrectChoice,
+  };
+}
+
 // GET - List all questions
 export async function GET(request: NextRequest) {
   try {
@@ -36,7 +75,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ questions });
+    // Mélanger les choix pour chaque question
+    const shuffledQuestions = questions?.map(q => shuffleChoices(q)) || [];
+
+    return NextResponse.json({ questions: shuffledQuestions });
   } catch (error) {
     console.error('Get questions error:', error);
     return NextResponse.json(
