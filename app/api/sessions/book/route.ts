@@ -31,16 +31,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Vérifier si l'utilisateur a déjà une réservation
-    const { data: existingBooking } = await supabase
-      .from('session_bookings')
-      .select('id')
-      .eq('inscription_id', inscription_id)
+    // Vérifier si une session a déjà été sélectionnée
+    const { data: inscriptionData } = await supabase
+      .from('inscriptions')
+      .select('selected_session_id')
+      .eq('id', inscription_id)
       .single();
 
-    if (existingBooking) {
+    if (inscriptionData?.selected_session_id) {
       return NextResponse.json(
-        { error: 'Vous avez déjà réservé une session' },
+        { error: 'Vous avez déjà sélectionné une session. Passez le pré-test pour finaliser votre inscription.' },
         { status: 400 }
       );
     }
@@ -70,41 +70,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Créer la réservation
-    const { data: booking, error: bookingError } = await supabase
-      .from('session_bookings')
-      .insert({
-        inscription_id,
-        session_id,
-      })
-      .select()
-      .single();
+    // Stocker la session sélectionnée dans l'inscription (pas encore de réservation)
+    const { error: updateError } = await supabase
+      .from('inscriptions')
+      .update({ selected_session_id: session_id })
+      .eq('id', inscription_id);
 
-    if (bookingError) {
-      console.error('Booking error:', bookingError);
+    if (updateError) {
+      console.error('Update inscription error:', updateError);
       return NextResponse.json(
-        { error: 'Erreur lors de la réservation de la session' },
+        { error: 'Erreur lors de la sélection de la session' },
         { status: 500 }
       );
     }
 
-    // Mettre à jour le compteur de participants
-    const { error: updateError } = await supabase
-      .from('sessions')
-      .update({ current_participants: session.current_participants + 1 })
-      .eq('id', session_id);
-
-    if (updateError) {
-      console.error('Update session participants error:', updateError);
-      // Ne pas échouer si la mise à jour échoue, la réservation est déjà créée
-    }
-
-    console.log('Booking created successfully:', booking);
+    console.log('Session selected successfully for inscription:', inscription_id);
 
     return NextResponse.json({
       success: true,
-      message: 'Session réservée avec succès',
-      booking,
+      message: 'Session sélectionnée avec succès. Passez maintenant le pré-test pour finaliser votre inscription.',
+      session: {
+        id: session.id,
+        session_date: session.session_date,
+      },
     });
   } catch (error) {
     console.error('Book session error:', error);

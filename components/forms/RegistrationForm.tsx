@@ -57,7 +57,7 @@ export function RegistrationForm() {
       <CardHeader>
         <CardTitle className="text-2xl">Inscription à la Masterclass IA</CardTitle>
         <CardDescription>
-          Remplissez le formulaire ci-dessous pour vous inscrire. Vous choisirez ensuite votre date de masterclass.
+          Remplissez le formulaire ci-dessous pour vous inscrire. Vous choisirez ensuite votre date de masterclass puis passerez le pré-test obligatoire.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -217,12 +217,12 @@ export function RegistrationForm() {
                 Inscription en cours...
               </>
             ) : (
-              'Choisir la date de session'
+              'Choisir ma date de session'
             )}
           </Button>
 
           <p className="text-sm text-center text-muted-foreground">
-            Après l&apos;inscription, vous choisirez votre date de masterclass.
+            Après l&apos;inscription, vous choisirez votre date de masterclass, puis vous passerez le pré-test obligatoire pour finaliser votre inscription.
           </p>
         </form>
       </CardContent>

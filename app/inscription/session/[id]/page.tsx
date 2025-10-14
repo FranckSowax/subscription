@@ -11,10 +11,10 @@ export default function SessionSelectionPage({ params }: { params: Promise<{ id:
   const router = useRouter();
 
   const handleSuccess = () => {
-    // Rediriger vers le test après la réservation
+    // Rediriger vers le pré-test après la sélection de session
     setTimeout(() => {
       router.push(`/test/pre?inscription_id=${id}`);
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -38,16 +38,14 @@ export default function SessionSelectionPage({ params }: { params: Promise<{ id:
           {/* Page Title */}
           <div className="text-center space-y-4">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-              📝 Finalisation de votre Inscription
+              📅 Choisissez votre Date de Masterclass
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Vos informations ont été enregistrées. Pour finaliser votre inscription, vous devez :
+              Sélectionnez la date qui vous convient le mieux pour participer à la masterclass :
               <br />
-              <strong className="text-primary">1. Choisir votre date de masterclass</strong>
+              <strong className="text-primary">Étape 1/2 : Choix de session</strong>
               <br />
-              <strong className="text-primary">2. Passer le test d&apos;évaluation</strong>
-              <br />
-              <span className="text-sm">✅ Votre inscription sera validée automatiquement après le test.</span>
+              <span className="text-sm">⚠️ Après avoir choisi votre date, vous passerez le pré-test obligatoire pour finaliser votre inscription.</span>
             </p>
           </div>
 
@@ -60,7 +58,7 @@ export default function SessionSelectionPage({ params }: { params: Promise<{ id:
           {/* Info */}
           <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-6 text-center">
             <p className="text-sm text-blue-900">
-              💡 <strong>À savoir :</strong> Après avoir choisi votre date, vous passerez un test d&apos;évaluation de 10 questions (15 secondes par question). Ce test nous permet d&apos;adapter le contenu de la masterclass à votre niveau. Votre inscription sera validée automatiquement.
+              💡 <strong>Important :</strong> Après avoir choisi votre date, vous serez redirigé vers le pré-test (10 questions, 15 secondes par question). Votre réservation sera automatiquement confirmée après avoir réussi le test.
             </p>
           </div>
         </div>

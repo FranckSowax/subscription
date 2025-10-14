@@ -26,6 +26,13 @@ export async function GET(
           id,
           title,
           description
+        ),
+        tests (
+          id,
+          type,
+          score,
+          max_score,
+          taken_at
         )
       `)
       .eq('id', id)
