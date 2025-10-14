@@ -136,12 +136,6 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
     }
   };
 
-  const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-      setTimeLeft(TIMER_DURATION);
-    }
-  };
 
   const handleSubmit = async () => {
     // Check if all questions are answered
@@ -347,15 +341,7 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
       )}
 
       {/* Navigation Buttons */}
-      <div className="flex items-center justify-between gap-4">
-        <Button
-          variant="outline"
-          onClick={handlePrevious}
-          disabled={currentQuestion === 0 || isSubmitting}
-        >
-          Précédent
-        </Button>
-
+      <div className="flex items-center justify-end gap-4">
         <div className={`flex items-center gap-2 text-sm font-medium ${
           isTimerLow ? 'text-destructive' : 'text-primary'
         }`}>
