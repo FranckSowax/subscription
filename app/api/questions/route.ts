@@ -6,17 +6,35 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// Types pour les questions
+interface QuestionChoices {
+  A: string;
+  B: string;
+  C: string;
+  D: string;
+}
+
+interface Question {
+  id: string;
+  masterclass_id: string;
+  question_text: string;
+  choices: QuestionChoices;
+  correct_choice: 'A' | 'B' | 'C' | 'D';
+  test_type: 'PRE' | 'POST';
+  created_at: string;
+}
+
 // Fonction pour mélanger les choix d'une question
-function shuffleChoices(question: any) {
+function shuffleChoices(question: Question): Question {
   const choices = question.choices;
   const correctChoice = question.correct_choice;
   
   // Créer un tableau des choix avec leurs lettres
   const choicesArray = [
-    { letter: 'A', text: choices.A },
-    { letter: 'B', text: choices.B },
-    { letter: 'C', text: choices.C },
-    { letter: 'D', text: choices.D },
+    { letter: 'A' as const, text: choices.A },
+    { letter: 'B' as const, text: choices.B },
+    { letter: 'C' as const, text: choices.C },
+    { letter: 'D' as const, text: choices.D },
   ];
   
   // Mélanger l'ordre des choix (Fisher-Yates shuffle)
@@ -26,9 +44,9 @@ function shuffleChoices(question: any) {
   }
   
   // Reconstruire les choix dans le nouvel ordre
-  const shuffledChoices: any = {};
-  let newCorrectChoice = '';
-  const letters = ['A', 'B', 'C', 'D'];
+  const shuffledChoices: QuestionChoices = { A: '', B: '', C: '', D: '' };
+  let newCorrectChoice: 'A' | 'B' | 'C' | 'D' = 'A';
+  const letters: Array<'A' | 'B' | 'C' | 'D'> = ['A', 'B', 'C', 'D'];
   
   choicesArray.forEach((choice, index) => {
     shuffledChoices[letters[index]] = choice.text;

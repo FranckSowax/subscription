@@ -75,6 +75,7 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
         clearInterval(timerRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQuestion, isSubmitting]);
 
   const handleAnswerSelect = (questionId: string, choice: string) => {
