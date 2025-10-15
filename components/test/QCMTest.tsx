@@ -104,11 +104,8 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
           if (currentQuestion < shuffledQuestions.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
           } else {
-            // Last question - auto submit if all answered
-            const allAnswered = shuffledQuestions.every((q) => answers[q.id]);
-            if (allAnswered) {
-              handleSubmit();
-            }
+            // Last question - auto submit (même si toutes ne sont pas répondues)
+            handleSubmit();
           }
           return TIMER_DURATION;
         }
@@ -138,12 +135,8 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
 
 
   const handleSubmit = async () => {
-    // Check if all questions are answered
-    const unanswered = shuffledQuestions.filter((q) => !answers[q.id]);
-    if (unanswered.length > 0) {
-      setError(`Veuillez répondre à toutes les questions (${unanswered.length} restantes)`);
-      return;
-    }
+    // Permettre la soumission même si toutes les questions ne sont pas répondues
+    // Les questions non répondues seront comptées comme incorrectes
 
     setIsSubmitting(true);
     setError(null);
@@ -356,7 +349,7 @@ export function QCMTest({ questions, testType, inscriptionId }: QCMTestProps) {
         ) : (
           <Button
             onClick={handleSubmit}
-            disabled={isSubmitting || answeredCount < shuffledQuestions.length}
+            disabled={isSubmitting}
             size="lg"
             className="min-w-[150px]"
           >

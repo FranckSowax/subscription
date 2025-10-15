@@ -90,13 +90,17 @@ export async function GET(request: NextRequest) {
           improvement: preTest && postTest
             ? Math.round((postTest.score / postTest.max_score) * 100) - Math.round((preTest.score / preTest.max_score) * 100)
             : null,
+          hasPreTest: !!preTest, // Indicateur pour le filtrage
         };
       })
     );
 
+    // Filtrer pour ne garder QUE les inscriptions avec pré-test passé
+    const validStudents = studentsWithTests.filter(student => student.hasPreTest);
+
     // Return CSV format if requested
     if (format === 'csv') {
-      const csv = generateCSV(studentsWithTests);
+      const csv = generateCSV(validStudents);
       return new NextResponse(csv, {
         headers: {
           'Content-Type': 'text/csv',
@@ -105,8 +109,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Return JSON format
-    return NextResponse.json({ students: studentsWithTests });
+    // Return JSON format (seulement les étudiants avec pré-test)
+    return NextResponse.json({ students: validStudents });
   } catch (error) {
     console.error('Get students error:', error);
     return NextResponse.json(
