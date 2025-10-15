@@ -16,7 +16,6 @@ SELECT
     i.validated,
     i.selected_session_id,
     s.session_date,
-    s.start_time,
     CASE 
         WHEN i.selected_session_id IS NOT NULL THEN 'Session choisie'
         ELSE 'Pas de session'
@@ -88,7 +87,6 @@ SELECT
         ELSE 'NON'
     END as a_choisi_session,
     s.session_date,
-    s.start_time,
     EXTRACT(DAY FROM (NOW() - i.registration_date)) as jours_depuis_inscription
 FROM inscriptions i
 INNER JOIN profiles p ON i.profile_id = p.id
@@ -112,7 +110,7 @@ SELECT
     EXTRACT(DAY FROM (NOW() - i.registration_date)) as jours_ecoules,
     CASE 
         WHEN i.selected_session_id IS NOT NULL 
-        THEN TO_CHAR(s.session_date, 'DD/MM/YYYY') || ' à ' || s.start_time
+        THEN TO_CHAR(s.session_date, 'DD/MM/YYYY')
         ELSE 'Aucune session choisie'
     END as session_choisie
 FROM inscriptions i
@@ -134,7 +132,6 @@ SELECT
     p.full_name,
     p.whatsapp_number,
     s.session_date,
-    s.start_time,
     TO_CHAR(i.registration_date, 'DD/MM/YYYY HH24:MI') as date_inscription,
     EXTRACT(DAY FROM (NOW() - i.registration_date)) as jours_depuis_inscription,
     CASE 
@@ -162,7 +159,6 @@ ORDER BY i.registration_date ASC;
 
 SELECT 
     s.session_date,
-    s.start_time,
     s.max_participants,
     s.current_participants as places_reservees,
     COUNT(i.id) as inscriptions_sans_test,
@@ -173,9 +169,9 @@ LEFT JOIN inscriptions i ON i.selected_session_id = s.id
         SELECT 1 FROM tests t 
         WHERE t.inscription_id = i.id AND t.type = 'PRE'
     )
-GROUP BY s.id, s.session_date, s.start_time, s.max_participants, s.current_participants
+GROUP BY s.id, s.session_date, s.max_participants, s.current_participants
 HAVING COUNT(i.id) > 0
-ORDER BY s.session_date, s.start_time;
+ORDER BY s.session_date;
 
 
 -- ============================================================
@@ -194,7 +190,7 @@ SELECT
     TO_CHAR(i.registration_date, 'DD/MM/YYYY HH24:MI:SS') as "Date d'inscription",
     CASE 
         WHEN i.selected_session_id IS NOT NULL 
-        THEN TO_CHAR(s.session_date, 'DD/MM/YYYY') || ' ' || s.start_time
+        THEN TO_CHAR(s.session_date, 'DD/MM/YYYY')
         ELSE 'Non choisie'
     END as "Session choisie",
     i.validated as "Validé",
